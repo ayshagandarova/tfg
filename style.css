@@ -1,4 +1,4 @@
-body, h1, h2, h3, h4, h5 {
+/*body, h1, h2, h3, h4, h5 {
   font-family: "Raleway", sans-serif
 }
 
@@ -10,4 +10,20 @@ body, h1, h2, h3, h4, h5 {
 
 .w3-third img:hover {
   opacity: 1
+}*/
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
 }

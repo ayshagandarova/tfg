@@ -15,7 +15,7 @@
 
 <body class="w3-light-grey w3-content" style="max-width:1600px">
 
-    <!-- Sidebar/menu -->
+    <!-- Sidebar/menu 
     <nav class="w3-sidebar w3-bar-block w3-white w3-animate-left w3-text-grey w3-collapse w3-top w3-center"
         style="z-index:3;width:300px;font-weight:bold" id="mySidebar"><br>
         <h3 class="w3-padding-64 w3-right"><b>Mallorca Barcos</b></h3>
@@ -23,30 +23,88 @@
             class="w3-bar-item w3-button w3-padding w3-hide-large">CLOSE</a>
         <a class="w3-bar-item w3-button">Afegir Dades</a>
         <a class="w3-bar-item w3-button">Consultar Dades</a>
-    </nav>
+    </nav>-->
 
-    <!-- Top menu on small screens -->
+    <!-- Top menu on small screens 
     <header class="w3-container w3-top w3-hide-large w3-white w3-xlarge w3-padding-16">
         <span class="w3-left w3-padding">Mallorca Barcos</span>
         <a href="javascript:void(0)" class="w3-right w3-button w3-white" onclick="w3_open()">☰</a>
-    </header>
+    </header>-->
 
-    <!-- Overlay effect when opening sidebar on small screens -->
+    <!-- Overlay effect when opening sidebar on small screens
     <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer"
-        title="close side menu" id="myOverlay"></div>
+        title="close side menu" id="myOverlay"></div>-->
 
     <!-- !PAGE CONTENT! -->
-    <div class="w3-main" style="margin-left:300px">
+    <div style="margin-left:80px;margin-right: 80px;">
 
         <!-- Push down content on small screens -->
         <div class="w3-hide-large" style="margin-top:83px"></div>
-        <h4>Almacena los datos del barco</h4>
-        <button id="infoBarco">Guarda el barco</button>
-        <h4>Se ha escuchado esto de la parte de los barcos: </h4>
-        <p id="resInfoBarco"></p>
-        <h4>Almacena los datos de los peces. Cuando acabes di stop</h4>
-        <button id="infoPeces">Guarda los peces</button>
-        <p id="resInfoPeces"></p>
+        <!-- fecha -->
+        <div>
+            <label for="date">Data:</label>
+            <input type="date" id="date" name="registre-date">
+        </div>
+        <h4>Datos generales del muestreo</h4>
+        <button id="infoGeneral">Guarda el barco</button>
+        <h4>Registro de los datos (decir STOP para finalizar la información general o ESPECIES para empezar a registrar las especies): </h4>
+        <h4>Ejemplo: Barco Anotnia munar segunda, Zona Portocolom, Pesca Arrosegament, Tipus Moralla Vermella, Caixes 4, Mostres 2, Codi 1, Pes 19. </h4>
+        <p style="background-color: black; color: azure;" id="resInfoGeneral"></p>
+        <!--desplegable del código de la muestra-->
+        <form action="/action_page.php">
+            <label for="codi">Código de la muestra = caja:</label>
+            <select name="codi" id="codi">
+              <option id="selecciona_muestra" value="Selecciona">Selecciona una muestra</option>
+            </select>
+          </form>
+        <h4>Almacena la talla de la especie</h4>
+        <p>Primero indicar la especie y luego mencionar las diferentes tallas que hay de esa especie</p>
+        <button id="infoEspecies">Guarda los peces</button>
+        <p id="resInfoEspecies"></p>
+        <h4>HTML Table</h4>
+        <div>
+            <!-- tabla definitiva -->
+            <table id="guardarCSV">
+                <tr>
+                    <th>Codi</th>
+                    <th>Especie</th>
+                    <th>Talla individu</th>
+                    <th>Pes caixa</th>
+                    <th>Caixes</th>
+                    <th>Mostres</th>
+                    <th>Codi mostra</th>
+                    <th>Tipus</th>
+                    <th>Zona</th>
+                    <th>Barca</th>
+                    <th>Tipus pesca</th>
+                    <th>Data</th>
+                    <th>Observacions</th>
+                </tr>
+               
+            </table>
+            <!-- tabla de información general -->
+            <table id="guardInformacionGeneral" style="margin-top: 5%;">
+                <tr>
+                    <th>Barca</th>
+                    <th>Zona</th>
+                    <th>Pesca</th>
+                    <th>Tipus</th>
+                    <th>Caixes</th>
+                    <th>Mostres</th>
+                    <th>Codi</th>
+                    <th>Pes</th>
+                </tr>
+               
+            </table>
+            <!-- tabla de las especies -->
+            <table id="guardInformacionEspecies" style="margin-top: 5%;">
+                <tr>
+                    <th>Especie</th>
+                    <th>Talla individu</th>
+                </tr>
+               
+            </table>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

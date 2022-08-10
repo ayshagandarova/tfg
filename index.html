@@ -46,7 +46,7 @@
             <input type="date" id="date" name="registre-date">
         </div>
         <h4>Datos generales del muestreo</h4>
-        <button id="infoGeneral">Guarda el barco</button>
+        <button id="infoGeneral">Guardar información general del muestreo</button>
         <h4>Registro de los datos (decir STOP para finalizar la información general o ESPECIES para empezar a registrar las especies): </h4>
         <h4>Ejemplo: Barco Anotnia munar segunda, Zona Portocolom, Pesca Arrosegament, Tipus Moralla Vermella, Caixes 4, Mostres 2, Codi 1, Pes 19. </h4>
         <p style="background-color: black; color: azure;" id="resInfoGeneral"></p>
@@ -57,10 +57,12 @@
               <option id="selecciona_muestra" value="Selecciona">Selecciona una muestra</option>
             </select>
           </form>
-        <h4>Almacena la talla de la especie</h4>
+        <h4>Almacena las tallas de las especies</h4>
         <p>Primero indicar la especie y luego mencionar las diferentes tallas que hay de esa especie</p>
-        <button id="infoEspecies">Guarda los peces</button>
-        <p id="resInfoEspecies"></p>
+        <button id="infoEspecies">Guardar las especies</button>
+        <p id="resInfoEspecies" style="background-color: black; color: azure;"></p>
+
+        <button id="exportarCSV" style="background-color: burlywood;">Exportar información</button>
         <h4>HTML Table</h4>
         <div>
             <!-- tabla definitiva -->
@@ -100,6 +102,7 @@
             <table id="guardInformacionEspecies" style="margin-top: 5%;">
                 <tr>
                     <th>Especie</th>
+                    <th>Código</th>
                     <th>Talla individu</th>
                 </tr>
                

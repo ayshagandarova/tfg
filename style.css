@@ -12,6 +12,20 @@
   opacity: 1
 }*/
 
+button {
+  border-radius: 30px;
+  background: rgb(237, 202, 90);
+}
+
+/*
+button:hover{
+  background: #fbc30b;
+}*/
+
+button:focus{
+  background: rgb(227, 94, 27);
+}
+
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;

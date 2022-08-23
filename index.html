@@ -8,9 +8,12 @@
     <meta name="viewport" content="width=device-width">
     <title>Barcos y peces</title>
     <link rel="stylesheet" href="style.css">
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="shortcut icon" href="">
+    <link rel="shortcut icon" href="#">
 </head>
 
 <body class="w3-light-grey w3-content" style="max-width:1600px">
@@ -46,24 +49,66 @@
             <input type="date" id="date" name="registre-date">
         </div>
         <h4>Datos generales del muestreo</h4>
-        <button id="infoGeneral">Guardar información general del muestreo</button>
+        <div>
+            <input type="file" id="files" name="files[]" multiple />
+            <audio id="player" preload="auto"></audio>
+        </div>
+        
+        <button id="infoGeneral"  style="margin-top: 2%; margin-bottom: 2%;">Guardar información general del muestreo</button>
+        <button id="registroDelAudio"  style="margin-top: 2%; margin-bottom: 2%;">añadir archivo wav</button> 
         <!-- <button id="detenerGeneral">Detener registro de infromación general</button> -->
-        <h4>Registro de los datos (decir STOP para finalizar la información general o ESPECIES para empezar a registrar las especies): </h4>
-        <h4>Ejemplo: Barco Anotnia munar segunda, Zona Portocolom, Pesca Arrosegament, Tipus Moralla Vermella, Caixes 4, Mostres 2, Codi 1, Pes 19. </h4>
-        <p style="background-color: black; color: azure;" id="resInfoGeneral"></p>
+        <!-- <h4>Registro de los datos (decir STOP para finalizar la información general o ESPECIES para empezar a registrar las especies): </h4> -->
+        <!-- <h4>Ejemplo: Barco Anotnia munar segunda, Zona Portocolom, Pesca Arrosegament, Tipus Moralla Vermella, Caixes 4, Mostres 2, Codi 1, Pes 19. </h4> -->
+        
+        <div></div>
+        <label for="resInfoGeneral">Resultado: </label>
+        <div></div>
+        <input type="text" id="resInfoGeneral" name="name" required minlength="4" maxlength="1000" size="100%" >
+        <div style="margin-top: 2%;">
+            <!-- tabla de información general -->
+            <table id="guardInformacionGeneral" >
+                <tr>
+                    <th>Barca</th>
+                    <th>Zona</th>
+                    <th>Pesca</th>
+                    <th>Tipus</th>
+                    <th>Caixes</th>
+                    <th>Mostres</th>
+                    <th>Codi</th>
+                    <th>Pes</th>
+                </tr>
+            </table>
+        </div>
         <!--desplegable del código de la muestra-->
-        <form action="/action_page.php">
-            <label for="codi">Código de la muestra = caja:</label>
-            <select name="codi" id="codi">
-              <option id="selecciona_muestra" value="Selecciona">Selecciona una muestra</option>
-            </select>
-          </form>
+        <div style="margin-top: 2%;">
+            <form action="/action_page.php">
+                <label for="codi">Código de la muestra = caja:</label>
+                <select name="codi" id="codi">
+                  <option id="selecciona_muestra" value="Selecciona">Selecciona una muestra</option>
+                </select>
+            </form>
+        </div>
         <h4>Almacena las tallas de las especies</h4>
-        <p>Primero indicar la especie y luego mencionar las diferentes tallas que hay de esa especie</p>
-        <button id="infoEspecies">Guardar las especies</button>
-        <p id="resInfoEspecies" style="background-color: black; color: azure;"></p>
-        <button id="observaciones">Añadir observaciones de las especies</button>
-        <button id="exportarCSV" >Exportar información</button>
+        <!-- <p>Primero indicar la especie y luego mencionar las diferentes tallas que hay de esa especie</p> -->
+        <button id="infoEspecies" style="margin-top: 2%; margin-bottom: 2%;">Guardar las especies</button>
+        <div></div>
+        <label for="resInfoEspecies">Resultado: </label>
+        <div></div>
+        <input type="text" id="resInfoEspecies" name="name" required minlength="4" maxlength="1000" size="100%" >
+        <div></div>
+        <button id="observaciones" style="margin-top: 2%; margin-bottom: 2%;">Añadir observaciones de las especies</button>
+        <div style="margin-top: 2%;"><!-- tabla de las especies -->
+            <table id="guardInformacionEspecies">
+                <tr>
+                    <th>Especie</th>
+                    <th>Código</th>
+                    <th>Talla individu</th>
+                </tr>
+            </table>
+        </div>
+        <button id="exportarCSV" style="margin-top: 2%; margin-bottom: 2%;">Exportar información</button>
+        
+        <div></div>
         <h4>HTML Table</h4>
         <div>
             <!-- tabla definitiva -->
@@ -79,32 +124,9 @@
                     <th>Tipus</th>
                     <th>Zona</th>
                     <th>Barca</th>
-                    <th>Tipus pesca</th>
+                    <th>Pesca</th>
                     <th>Data</th>
                     <th>Observacions</th>
-                </tr>
-               
-            </table>
-            <!-- tabla de información general -->
-            <table id="guardInformacionGeneral" style="margin-top: 5%;">
-                <tr>
-                    <th>Barca</th>
-                    <th>Zona</th>
-                    <th>Pesca</th>
-                    <th>Tipus</th>
-                    <th>Caixes</th>
-                    <th>Mostres</th>
-                    <th>Codi</th>
-                    <th>Pes</th>
-                </tr>
-               
-            </table>
-            <!-- tabla de las especies -->
-            <table id="guardInformacionEspecies" style="margin-top: 5%;">
-                <tr>
-                    <th>Especie</th>
-                    <th>Código</th>
-                    <th>Talla individu</th>
                 </tr>
                
             </table>

@@ -5,7 +5,6 @@ var infoEspecies = document.getElementById('infoEspecies');  // button that gets
 var resInfoEspecies = document.getElementById('resInfoEspecies'); // the rsults of each fish
 
 var observaciones = document.getElementById('observaciones')
-
 // color de los botones:
 infoGeneral.style.background = 'rgb(237, 202, 90)'
 infoEspecies.style.background = 'rgb(237, 202, 90)'
@@ -28,7 +27,6 @@ var datos = { gGeneral: "", gEspecies:"", vocGeneral: [], especies: [], codigos:
 setFecha()
 startRecognition()
 exportarCSV.onclick = function () {
-  console.log("helloooou")
   rellenarCSV()
   crearCSV()
 }
@@ -42,17 +40,25 @@ function startRecognition() {
       definirGramaticas(datosFichero, datos);
       
       recognitionGeneral = setRecognition(datos.gramatica, 'ca-ES')
-      recognitionEspecies = setRecognition(datos.gramatica, 'ca-ES') // Las especies siempre serán en castellano
+      recognitionEspecies = setRecognition(datos.gramatica, 'es-ES') // Las especies siempre serán en castellano
       recognitionObservaciones = setRecognition(datos.gGeneral, 'ca-ES') //añadir otros tambien
       infoGeneral.onclick = function () {
-        if (infoGeneral.style.background == 'rgb(237, 202, 90)'){
+        if (infoGeneral.style.background == 'rgb(237, 202, 90)'){ // amarillo
           infoGeneral.style.background = 'rgb(227, 94, 27)';
+          resInfoGeneral.value = ""
           setResultadoGeneralNull()
+
+          
+
+
+
           recognitionGeneral.start();
           var fecha = document.getElementById('date')
           resultadoGeneral.dia = fecha.getAttribute('value')
-        }else{
-          recognitionGeneral.stop();
+        }else{ // naranja
+          recognitionGeneral.onspeechend = () => {
+            recognitionGeneral.stop();
+          }
           infoGeneral.style.background = 'rgb(237, 202, 90)';
         }
         
@@ -61,94 +67,114 @@ function startRecognition() {
       infoEspecies.onclick = function () {
         if ( infoEspecies.style.background == 'rgb(237, 202, 90)'){
           infoEspecies.style.background = 'rgb(227, 94, 27)';
+          resInfoEspecies.value = ""
           recognitionEspecies.start();
         }else {
-          recognitionEspecies.stop();
+          recognitionEspecies.onspeechend = () => {
+            recognitionEspecies.stop();
+          }
           infoEspecies.style.background = 'rgb(237, 202, 90)';
         }
         
       }
-
       observaciones.onclick = function() {
-        if ( infoEspecies.style.background == 'rgb(237, 202, 90)'){
+        if ( observaciones.style.background == 'rgb(237, 202, 90)'){
           observaciones.style.background = 'rgb(227, 94, 27)';
           recognitionObservaciones.start();
         }else {
-          recognitionObservaciones.stop();
+          recognitionObservaciones.onspeechend = () => {
+            recognitionObservaciones.stop();
+          }
           observaciones.style.background = 'rgb(237, 202, 90)';
         }
       }
-  
+
+      player = document.getElementById('player');
+      document.getElementById('files').addEventListener('change', handleFileSelect, false);
+      var registroDelAudio = document.getElementById('registroDelAudio')
+      registroDelAudio.onclick = function() {
+        if(player.src != null){
+          infoGeneral.click()
+          player.play(); 
+        }
+      }
+
+      resInfoGeneral.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+         // event.preventDefault();
+          setResultadoGeneralNull()
+          console.log(resInfoGeneral.value)
+          resInfoGeneral.value = resInfoGeneral.value.toLowerCase()
+          var s = comprobarParseo(resInfoGeneral.value, 8)
+          console.log(s)
+          s = processGeneral(s, datos.arrBarco)
+          setCodiMuestras()
+        }
+      });
+
+      resInfoEspecies.addEventListener("keypress", function(event){
+        if (event.key === "Enter") {
+          // event.preventDefault();
+           setResultadoEspeciesNull()
+           console.log(resInfoEspecies.value)
+           resInfoEspecies.value = resInfoEspecies.value.toLowerCase()
+           var s = comprobarParseo(resInfoEspecies.value, 2)
+           console.log(s)
+           s = processEspecies(s, datos.arrBarco)
+           setCodiMuestras()
+         }
+      });
       recognitionGeneral.onresult = function (event) { // hay respuesta válida
         if (!event.results[event.results.length - 1][0].transcript.includes(" final")){
           console.log("queda información ")
+          resInfoGeneral.value +=  event.results[event.results.length - 1][0].transcript
           return // si no lleva la palabra stop no hace nada y espera a que haya
         }else {
           recognitionGeneral.stop();
+          resInfoGeneral.value += event.results[event.results.length - 1][0].transcript.replace(" final", "")
           infoGeneral.style.background = 'rgb(237, 202, 90)';
         }
-      
         // comrpobamos las 5 opciones:
-        var prova 
-        console.log(event.results)
-        for (var i = 0 ; i <event.results[i].length; i++){ // comprueba los diferentes onmatch
-          for (var j = 0; j < event.results.length; j++){ // comprueba toda la oracion 
-            prova = event.results[i][j].transcript + " "
-            if (prova.includes(" final")){
-              prova = prova.replace(" final", "");
-            }
-          }
-          prova = prova.toLowerCase()
-          var s = comprobarParseo(prova, 8)
-          console.log(s)
-          if (s != null){
-            resInfoGeneral.innerHTML = prova
-            s = processGeneral(s, datos.arrBarco)
-            setCodiMuestras()
-            recognitionGeneral.stop()
-            infoGeneral.style.background = 'rgb(237, 202, 90)';
-            break;
-          }
-          prova = ""
-          //speechSynthesis.speak(new SpeechSynthesisUtterance(s));
+        
+        /*for (var i = 0 ; i < event.results.length; i++){ // comprueba los diferentes onmatch
+          prova += event.results[i][0].transcript + " " 
+        }*/
+        resInfoGeneral.value = resInfoGeneral.value
+        var s = comprobarParseo(resInfoGeneral.value, 8)
+        if (s==null){
+          speechSynthesis.speak(new SpeechSynthesisUtterance("No se han podido registrar todas las columnas. Compruebe el texto"));
+        }else{
+          s = processGeneral(s, datos.arrBarco)
+          setCodiMuestras()
+          recognitionGeneral.stop()
+          infoGeneral.style.background = 'rgb(237, 202, 90)';
         }
-      //  resInfoGeneral.innerHTML  = "barca nou capdepera zona alcudia pesca arrosegament tipus moralla blanca caixes 3 mostres 3 codi 1 pes 16"
       }
+
 
       // añadir aqui el parseo y que se añada directamente al array de resultados 
       // tambien añadir algo que cuando diga stop se haga se apague el reconocimiento 
       // añadir a lo mejor otra palabra para que Marina no tenga que pulsar el botón de especies
 
       recognitionEspecies.onresult = function (event) { // hay respuesta válida
-       if (!event.results[event.results.length -1 ][0].transcript.includes(" final")){
+       if (!event.results[event.results.length -1 ][0].transcript.includes(" final")  ){
+          resInfoEspecies.value += event.results[event.results.length -1 ][0].transcript + " "
           return // si no lleva la palabra stop no hace nada y espera a que se registre
         }else {
           if (resultadoEspecies.especie[0] != null){ 
+            console.log("tengo especies de antes, las añado al csv")
             rellenarCSV()
           }
           recognitionEspecies.stop();
+          console.log(player)
+          resInfoEspecies.value += event.results[event.results.length - 1][0].transcript.replace(" final", "")
           infoEspecies.style.background = 'rgb(237, 202, 90)';
-          event.results[event.results.length - 1][0].transcript = event.results[event.results.length - 1][0].transcript.replace(" final", "")
         }
-      
-        for (var i = 0 ; i < event.results.length; i++){
-          resInfoEspecies.innerHTML += event.results[i][0].transcript + " "
-          //speechSynthesis.speak(new SpeechSynthesisUtterance(s));        
-        }
-        //resInfoEspecies.innerHTML = "especie scorpaena notata talles 3,5 2 9 19 20 14 especie dorada talla 5,5 9 24 18 16"
-        resInfoEspecies.innerHTML = resInfoEspecies.innerHTML.toLowerCase()
-        var s = comprobarParseo(resInfoEspecies.innerHTML, 2)
-        if (s==null){
-          // No se ha podido guardar la información, a lo mejor exportar un documento .txt
-          // y a lo mejor leer lo que se ha guardado con sl speak
-        }else{
+        resInfoEspecies.value = resInfoEspecies.value.toLowerCase()
+        var s = comprobarParseo(resInfoEspecies.value, 2)
+        if (s!= null){
           s = processEspecies(s, datos.arrBarco)
-       }
-        //speechSynthesis.speak(new SpeechSynthesisUtterance(s));
-
-        // añadir aqui el parseo y que se añada directamente al array de resultados 
-        // tambien añadir algo que cuando diga stop se haga se apague el reconocimiento 
-        // añadir a lo mejor otra palabra para que Marina no tenga que pulsar el botón de especies
+        }
         recognitionEspecies.stop()
         infoEspecies.style.background = 'rgb(237, 202, 90)';
       }
@@ -169,23 +195,17 @@ function startRecognition() {
 
         var select = document.getElementById('codi');
         var codi = select.options[select.selectedIndex].value;
-        console.log(obser)
         resultadoGeneral.observaciones[codi] = obser
         observaciones.style.background = 'rgb(237, 202, 90)';
       }
-   /*   recognitionGeneral.onnomatch = function (event) { // si no se ha detectado bien 
-        resInfoBarco.textContent = 'No ha respuesta válida del barco';
-      }
-      recognitionEspecies.onnomatch = function (event) { // si no se ha detectado bien 
-        resInfoBarco.textContent = 'No ha respuesta válida del barco';
-      }
+
       recognitionGeneral.onerror = function (event) {
-        resInfoBarco.textContent = 'Se ha producido un error: ' + event.error;
+        resInfoBarco.textContent = 'Se ha producido un error, recargue la página: ' + event.error;
       }
 
       recognitionEspecies.onerror = function (event) {
-        resInfoBarco.textContent = 'Se ha producido un error: ' + event.error;
-      }*/
+        resInfoBarco.textContent = 'Se ha producido un error, recargue la página: ' + event.error;
+      }
     }
   };
   xmlhttp.open("GET", "datos.json", true);
@@ -245,8 +265,6 @@ function rellenarCSV(){
   var del = ';'
   var select = document.getElementById('codi');
   resultadoGeneral.codi = select.options[select.selectedIndex].value;
-  console.log(resultadoEspecies.especie)
-  console.log(resultadoEspecies.talla)
   for (var i = 0; i < resultadoEspecies.especie.length; i++){
     for (var j = 0; j < resultadoEspecies.talla[i].length; j++){
       var resultadoHTML = '<th>' + resultadoEspecies.codigo[i] + '</th><th>' + resultadoEspecies.especie[i] + '</th><th>' + resultadoEspecies.talla[i][j] + '</th><th>' + 
@@ -255,8 +273,6 @@ function rellenarCSV(){
       '</th><th>' + resultadoGeneral.dia + '</th><th>' + resultadoGeneral.observaciones[resultadoGeneral.codi - 1] + '</th>' 
       var row = resultado.insertRow()
       row.innerHTML = resultadoHTML
-      console.log(csv)
-      console.log(resultadoHTML)
       csv += resultadoEspecies.codigo[i] + del + resultadoEspecies.especie[i] + del + resultadoEspecies.talla[i][j] + del + 
       resultadoGeneral.pes + del + resultadoGeneral.caixes + del + resultadoGeneral.mostres + del + resultadoGeneral.codi + del + 
       resultadoGeneral.tipus + del + resultadoGeneral.zona + del + resultadoGeneral.barco + del + resultadoGeneral.pesca + del + resultadoGeneral.dia 
@@ -398,6 +414,28 @@ function definirGramaticas(datosFichero, datos) {
   datos.gramatica = '#JSGF V1.0; grammar vocabulario; public <vocabulario> = ' + 
     datos.especies.join(' | ') + ' | ' + datos.vocGeneral.join(' | ') + ' | ' + datos.separadorColumnas.join(' | ')  + 
     ' | ' + datosFichero.numeros.join(' | ')  + ' ;';
+}
+
+function handleFileSelect(evt) {//console.log('evt', evt.target.files);
+    var files = evt.target.files; // FileList object
+
+    playFile(files[0]);
+}
+
+
+function playFile(file) {console.log('file', file);
+  if (file.type == 'audio/wav'){
+    var freader = new FileReader();
+    freader.onload = function(e) {
+        player.src = e.target.result;
+    };
+    freader.onerror = function(e){
+      alert("No se ha podido leer el archivo")
+    }
+    freader.readAsDataURL(file);
+  }else{
+    alert("El archivo no tiene el formato adecuado (debe ser wav)")
+  }
 }
 
 // sets the recognition API 

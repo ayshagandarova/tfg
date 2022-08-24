@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width">
-    <title>Barcos y peces</title>
+    <title>Registro de las muestras del Instituto Oceanografico de Baleares</title>
     <link rel="stylesheet" href="style.css">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -43,19 +43,31 @@
 
         <!-- Push down content on small screens -->
         <div class="w3-hide-large" style="margin-top:83px"></div>
-        <!-- fecha -->
-        <div>
+        <audio id="player" preload="auto"></audio>
+       
+        <div style="margin-top: 2%;">
+            <h4>Importar desde archivo</h4>
+            
+            <form action="/action_page.php">
+                <select name="tipoRegistro" id="tipoRegistro">
+                    <option id="fromFile" value="1">Desde archivo</option>
+                    <option id="fromVoice" value="2">A partir de la voz</option>
+                </select>
+            </form>
+        </div>
+         <!-- fecha -->
+         <div style="margin-top: 2%;">
+            
             <label for="date">Data:</label>
             <input type="date" id="date" name="registre-date">
         </div>
+        
         <h4>Datos generales del muestreo</h4>
         <div>
-            <input type="file" id="files" name="files[]" multiple />
-            <audio id="player" preload="auto"></audio>
+            <input type="file" id="audioGeneral" name="files[]" multiple />
         </div>
         
-        <button id="infoGeneral"  style="margin-top: 2%; margin-bottom: 2%;">Guardar información general del muestreo</button>
-        <button id="registroDelAudio"  style="margin-top: 2%; margin-bottom: 2%;">añadir archivo wav</button> 
+        <button id="infoGeneral"  style="margin-top: 2%; margin-bottom: 2%;">Registrar información general</button>
         <!-- <button id="detenerGeneral">Detener registro de infromación general</button> -->
         <!-- <h4>Registro de los datos (decir STOP para finalizar la información general o ESPECIES para empezar a registrar las especies): </h4> -->
         <!-- <h4>Ejemplo: Barco Anotnia munar segunda, Zona Portocolom, Pesca Arrosegament, Tipus Moralla Vermella, Caixes 4, Mostres 2, Codi 1, Pes 19. </h4> -->
@@ -89,14 +101,19 @@
             </form>
         </div>
         <h4>Almacena las tallas de las especies</h4>
+        <div>
+            <input type="file" id="audioEspecies" name="files[]" multiple />
+            
+        </div>
+        
         <!-- <p>Primero indicar la especie y luego mencionar las diferentes tallas que hay de esa especie</p> -->
-        <button id="infoEspecies" style="margin-top: 2%; margin-bottom: 2%;">Guardar las especies</button>
+        <button id="infoEspecies" style="margin-top: 2%; margin-bottom: 2%;">Registrar la muestra</button>
         <div></div>
         <label for="resInfoEspecies">Resultado: </label>
         <div></div>
         <input type="text" id="resInfoEspecies" name="name" required minlength="4" maxlength="1000" size="100%" >
         <div></div>
-        <button id="observaciones" style="margin-top: 2%; margin-bottom: 2%;">Añadir observaciones de las especies</button>
+        <button id="observaciones" style="margin-top: 2%; margin-bottom: 2%;">Registrar observaciones</button>
         <div style="margin-top: 2%;"><!-- tabla de las especies -->
             <table id="guardInformacionEspecies">
                 <tr>
@@ -132,7 +149,10 @@
             </table>
         </div>
     </div>
+    <script src="globalVariables.js"></script>
+    <script src="functions.js"></script>
     <script src="script.js"></script>
+    <script src="listeners.js"></script>
 </body>
 
 </html>

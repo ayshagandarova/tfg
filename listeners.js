@@ -45,6 +45,7 @@ infoGeneral.onclick = function () {
         resInfoGeneral.value = ""
         setResultadoGeneralNull()
         recognitionGeneral.start();
+        infoGeneral.style.background = naranja;
         infoGeneral.innerHTML ="Registrando..."
         var fecha = document.getElementById('date')
         resultadoGeneral.dia = fecha.getAttribute('value')
@@ -65,6 +66,7 @@ infoEspecies.onclick = function () {
         resInfoEspecies.value = ""
         infoEspecies.innerHTML = "Registrando..."
         recognitionEspecies.start();
+        infoEspecies.style.background = naranja;
         if (aPartirArchivo){
             playAndRegister()
         }
@@ -81,6 +83,7 @@ observaciones.onclick = function() {
         btnObservaciones = true
         observaciones.innerHTML = "Registrando"
         recognitionObservaciones.start();
+        observaciones.style.background = naranja;
     }else {
         btnObservaciones = false;
         observaciones.innerHTML = "Registrar observaciones de la muestra " + selectCodi.options[selectCodi.selectedIndex].value

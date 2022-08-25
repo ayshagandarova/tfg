@@ -136,7 +136,8 @@
         "trachurus trachurus",
         "sparus aurata",
         "phycis phycis",
-        "larus viridis"
+        "labrus viridis ",
+        "trisopterus minutus"
     ],
     "codigos": [
        "10725",
@@ -157,9 +158,9 @@
        "10538",
        "10790",
        "10804",
-       "",
+       "10265",
        "11168",
-       "",
+       "10731",
        "10541",
        "10800",
        "10416",
@@ -167,20 +168,21 @@
        "10718",
        "11208",
        "10330",
-       "",
-       "",
-       "",
-       "10521",
+       "10775",
+       "10283",
+       "10727",
+       "10522",
        "10488",
-       "",
-       "",
-       "",
-       "",
-       "",
-       "",
-       "",
-       "",
-       ""
+       "10262",
+       "10507",
+       "10542",
+       "10729",
+       "10414",
+       "10519",
+       "10792",
+       "10263",
+       "10558",
+       "10275"
     ],
     "tipus": [
         "morralla vermella",
@@ -239,10 +241,13 @@
         " especies ",
         " espècies ",
         "especie ",
+        "espècie",
         "especies ",
+        "espècies ",
         "talla ",
-        "medida ",
-        "talles "
+        "talles ",
+        "tallas ",
+        " medida "
     ],
 
     "numeros": [

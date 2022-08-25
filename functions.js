@@ -92,15 +92,18 @@ function isNum(val){
   
 function parsear(response, num){
     for (var i = 0; i<datos.separadorColumnas.length; i++){
-      if (datos.separadorColumnas[i] === "barca " || datos.separadorColumnas[i] === "barco "
-      || datos.separadorColumnas[i] === "especies " || datos.separadorColumnas[i] === "especie "
-      || datos.separadorColumnas[i] === "medidas " || datos.separadorColumnas[i] === "talla " 
-      || datos.separadorColumnas[i] === "talles " || datos.separadorColumnas[i] === "tallas " 
-      || datos.separadorColumnas[i] === "medides "  ){
-        response = response.replace(datos.separadorColumnas[i] , "")
-      }else{
-        response = response.replace(datos.separadorColumnas[i] , ";")
-      }
+        if ((datos.separadorColumnas[i] === "barca " || datos.separadorColumnas[i] === "barco "
+        || datos.separadorColumnas[i] === "especies " || datos.separadorColumnas[i] === "especie "
+        || datos.separadorColumnas[i] === "espècie " || datos.separadorColumnas[i] === "espècies "
+        || datos.separadorColumnas[i] === "talla "  || datos.separadorColumnas[i] === "talles " 
+        || datos.separadorColumnas[i] === "tallas " || datos.separadorColumnas[i] === "medidas " 
+        || datos.separadorColumnas[i] === "medides ") && response.includes(datos.separadorColumnas[i])
+        
+            ){
+            response = response.replaceAll(datos.separadorColumnas[i] , "")
+        } else if (response.includes(datos.separadorColumnas[i])){
+            response = response.replaceAll(datos.separadorColumnas[i] , ";")
+        }
     }
     response = response.split(";")
     if (response.length < num){
@@ -150,10 +153,9 @@ function processEspecies(response) {
     if (resultadoGeneral.codi == ""){
         resultadoGeneral.codi = document.getElementById('selecciona_muestra').innerHTML
     }
-  
     for (var i = 0; i < response.length; i++){
-        response[i] = response[i].replace("," , ".")
-        response[i] = response[i].replace("-" , ".")
+        response[i] = response[i].replaceAll("," , ".")
+        response[i] = response[i].replaceAll("-" , " ")
         var aux = response[i].split(" ")
         resultadoEspecies.especie[i] = aux[0]
         var tallas = new Array()
@@ -161,7 +163,7 @@ function processEspecies(response) {
             if (!isNum(aux[j])){
                 resultadoEspecies.especie[i] += " " + aux[j]
             }else{
-                tallas.push(aux[j].replace("." , ","))
+                tallas.push(aux[j].replaceAll("." , ","))
             } 
         }
         resultadoEspecies.talla[i] = tallas
@@ -175,7 +177,6 @@ function processEspecies(response) {
             break;
             }
         }
-  
         for (var j = 0; j < resultadoEspecies.talla[i].length; j++){
             var row = resultado.insertRow()
             resultadoHTML = "<th>" + resultadoEspecies.especie[i] + "</th><th>" + resultadoEspecies.codigo[i] + "</th><th>" + resultadoEspecies.talla[i][j] + "</th>"
@@ -184,10 +185,7 @@ function processEspecies(response) {
     }
     return response
 }
-  
-  /*Método que corrige la palabra que le pasan:
-   - Si la palabra ya está en el diccionario, se devuelve la misma */
-  
+
   // creates the grammar of the data from json
 function definirGramaticas(datosFichero, datos) {
     datos.vocGeneral = datosFichero.barcos.concat(datosFichero.zonas.concat(datosFichero.pesca.concat(datosFichero.tipus)))
@@ -207,7 +205,6 @@ function handleFileSelect(evt) {//console.log('evt', evt.target.files);
     var files = evt.target.files; // FileList object
     playFile(files[0]);
 }
-  
   
 function playFile(file) {
     if (file.type == 'audio/wav' || file.type == 'audio/mpeg'){

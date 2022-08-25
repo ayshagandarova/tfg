@@ -219,7 +219,7 @@ function playFile(file) {
             alert("No se ha podido leer el archivo")
         }
         freader.readAsDataURL(file);
-    }else{
+    }else{ // si no tiene ese formato no tenemos que añadir el archivo
         alert("El archivo no tiene el formato adecuado (debe ser wav o mp3)")
     }
 }

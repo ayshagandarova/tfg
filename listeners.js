@@ -5,13 +5,14 @@ tipoRegistro.addEventListener("change", function() {
 player.addEventListener("ended", function(){
     player.currentTime = 0;
     if(btnGeneral){
-        recognitionGeneral.stop()
+        infoGeneral.click()
     }else if (btnEspecies){
-        recognitionEspecies.stop()
+        infoEspecies.click()
     }else if (btnObservaciones){
-        recognitionObservaciones.stop()
+        observaciones.click()
     }
     console.log("El audio ha finalizado.");
+
 });
 
 exportarCSV.onclick = function () {

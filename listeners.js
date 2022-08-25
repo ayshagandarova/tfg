@@ -4,6 +4,13 @@ tipoRegistro.addEventListener("change", function() {
   
 player.addEventListener("ended", function(){
     player.currentTime = 0;
+    if(btnGeneral){
+        recognitionGeneral.stop()
+    }else if (btnEspecies){
+        recognitionEspecies.stop()
+    }else if (btnObservaciones){
+        recognitionObservaciones.stop()
+    }
     console.log("El audio ha finalizado.");
 });
 
@@ -70,14 +77,13 @@ infoEspecies.onclick = function () {
 
 observaciones.onclick = function() {
     if (!btnObservaciones){
+        btnObservaciones = true
         observaciones.innerHTML = "Registrando"
         recognitionObservaciones.start();
-
     }else {
+        btnObservaciones = false;
         observaciones.innerHTML = "Registrar observaciones de la muestra " + selectCodi.options[selectCodi.selectedIndex].value
-        recognitionObservaciones.onspeechend = () => {
-            recognitionObservaciones.stop();
-        }
+        recognitionObservaciones.stop();
         observaciones.style.background = amarillo;
     }
 }

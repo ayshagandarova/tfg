@@ -16,11 +16,9 @@ xmlhttp.onreadystatechange = function () {
       if (event.key === "Enter") {
         // event.preventDefault();
         setResultadoGeneralNull()
-        console.log(resInfoGeneral.value)
         resInfoGeneral.value = resInfoGeneral.value.toLowerCase()
         var s = comprobarParseo(resInfoGeneral.value, 8)
         if (s != null){
-          console.log(s)
           s = processGeneral(s, datos.arrBarco)
           setCodiMuestras()
         }else{
@@ -35,7 +33,6 @@ xmlhttp.onreadystatechange = function () {
           setResultadoEspeciesNull()
           resInfoEspecies.value = resInfoEspecies.value.toLowerCase()
           var s = comprobarParseo(resInfoEspecies.value, 2)
-          console.log(s)
           if (s != null){
             s = processEspecies(s, datos.arrBarco)
             setCodiMuestras()
@@ -77,11 +74,9 @@ xmlhttp.onreadystatechange = function () {
         return // si no lleva la palabra stop no hace nada y espera a que se registre
       }else {
         if (resultadoEspecies.especie[0] != null){ 
-          console.log("tengo especies de antes, las añado al csv")
           rellenarCSV()
         }
         recognitionEspecies.stop();
-        console.log(player)
         resInfoEspecies.value += event.results[event.results.length - 1][0].transcript.replace(" final", "")
         infoEspecies.style.background = amarillo;
       }

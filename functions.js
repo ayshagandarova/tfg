@@ -54,7 +54,6 @@ function rellenarCSV(){
     var del = ';'
     var select = document.getElementById('codi');
     resultadoGeneral.codi = select.options[select.selectedIndex].value;
-    console.log("estoy rellendando la tabla y csv")
     for (var i = 0; i < resultadoEspecies.especie.length; i++){
       for (var j = 0; j < resultadoEspecies.talla[i].length; j++){
         var resultadoHTML = '<th>' + resultadoEspecies.codigo[i] + '</th><th>' + resultadoEspecies.especie[i] + '</th><th>' + resultadoEspecies.talla[i][j] + '</th><th>' + 
@@ -70,23 +69,19 @@ function rellenarCSV(){
       }
     }
     if(resultadoGeneral.codi != select.options[select.length-1].value){
-        console.log("Ya he hecho las " + select.options[select.length-1].value + " muestras")
         resInfoGeneral.value = ""
     }
     setResultadoEspeciesNull()
 }
 
 function crearCSV(){
-    console.log("estoy creando el csv")
     if (resultadoEspecies.especie[0] != null){ 
-        console.log("tengo especies de antes, las añado al csv")
         rellenarCSV()
     }
     var link = window.document.createElement("a");
     link.setAttribute("href", "data:text/csv;charset=utf-8," + encodeURI(csv));
     link.setAttribute("download", resultadoGeneral.dia + ".csv"); 
     link.click();
-    console.log("holaaa")
     resInfoGeneral.value = ""
     setResultadoGeneralNull()
 }
@@ -215,7 +210,7 @@ function handleFileSelect(evt) {//console.log('evt', evt.target.files);
   
   
 function playFile(file) {
-    if (file.type == 'audio/wav'){
+    if (file.type == 'audio/wav' || file.type == 'audio/mpeg'){
         var freader = new FileReader();
         freader.onload = function(e) {
             player.src = e.target.result;
@@ -225,7 +220,7 @@ function playFile(file) {
         }
         freader.readAsDataURL(file);
     }else{
-        alert("El archivo no tiene el formato adecuado (debe ser wav)")
+        alert("El archivo no tiene el formato adecuado (debe ser wav o mp3)")
     }
 }
   

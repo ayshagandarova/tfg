@@ -8,147 +8,216 @@
     <meta name="viewport" content="width=device-width">
     <title>Registro de las muestras del Instituto Oceanografico de Baleares</title>
     <link rel="stylesheet" href="style.css">
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="shortcut icon" href="">
     <link rel="shortcut icon" href="#">
 </head>
+<body>
 
-<body class="w3-light-grey w3-content" style="max-width:1600px">
+    <header>
+        <h1>Registro de muestras del Instituto Oceanográfico de Baleares</h1>
+    </header>
 
-    <!-- Sidebar/menu 
-    <nav class="w3-sidebar w3-bar-block w3-white w3-animate-left w3-text-grey w3-collapse w3-top w3-center"
-        style="z-index:3;width:300px;font-weight:bold" id="mySidebar"><br>
-        <h3 class="w3-padding-64 w3-right"><b>Mallorca Barcos</b></h3>
-        <a href="javascript:void(0)" onclick="w3_close()"
-            class="w3-bar-item w3-button w3-padding w3-hide-large">CLOSE</a>
-        <a class="w3-bar-item w3-button">Afegir Dades</a>
-        <a class="w3-bar-item w3-button">Consultar Dades</a>
-    </nav>-->
+    <div class="row">
+        <div class="columnLeft">
+            <audio id="player" preload="auto"></audio>
 
-    <!-- Top menu on small screens 
-    <header class="w3-container w3-top w3-hide-large w3-white w3-xlarge w3-padding-16">
-        <span class="w3-left w3-padding">Mallorca Barcos</span>
-        <a href="javascript:void(0)" class="w3-right w3-button w3-white" onclick="w3_open()">☰</a>
-    </header>-->
+            <!-- DATOS PREVIOS -->
+            <!-- Observación -->
+            <div class="callout">
+                
+                <p> 
+                    <img class="imgCallout" src="callout.png" alt="">
+                    Para registrar el muestreo a partir de un archivo de audio el formato del archivo deber ser <strong>WAV o MP3</strong>.
+                    Puede pulsar <a  target="_blank" href="https://convertio.co/es/mpeg-wav/">este enlace para realizar la conversión.</a>
+                </p>
+            </div>
+            <!-- Como realizar el muestreo -->
+            <div>
+                <h2>¿Cómo desea realizar el muestreo?</h2>
+                <form action="/action_page.php">
+                    <select name="tipoRegistro" id="tipoRegistro">
+                        <option id="fromFile" value="1">Desde el archivo</option>
+                        <option id="fromVoice" value="2">A partir de la voz</option>
+                    </select>
+                </form>
+                <span></span>
+                <div class="callout">
+                    <p> 
+                        <img class="imgCallout" src="callout.png" alt="">
+                        Para realizar el registro <strong>desde el archivo</strong> deber tener el micrófono funcionando 
+                         y el altavoz puesto al máximo.
+                    </p>
+                </div>
+            </div>
+            <!-- Fecha -->
+            <div>
+                <h2>¿Cúando se realizó el muestreo?</h2>
+                <input type="date" id="date" name="registre-date">
+            </div>
+            <!-- Registro Información General -->
+            <div>
+                <h2>Datos generales del muestreo</h2>
+                <div class="calloutGrey" >
+                    <p> 
+                        <strong>Ejemplo: </strong>Barca Anotnia Munar Segona Zona Alcudia Pesca Arrosegament Tipus Moralla Vermella 
+                        Caixes 4 Mostres 2 Codi 1 Pes 20,5
+                    </p>
+                </div>
+            </div>
+        </div>
 
-    <!-- Overlay effect when opening sidebar on small screens
-    <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer"
-        title="close side menu" id="myOverlay"></div>-->
-
-    <!-- !PAGE CONTENT! -->
-    <div style="margin-left:80px;margin-right: 80px;">
-
-        <!-- Push down content on small screens -->
-        <div class="w3-hide-large" style="margin-top:83px"></div>
-        <audio id="player" preload="auto"></audio>
-       
-        <div style="margin-top: 2%;">
-            <h4>Importar desde archivo (debe ser formato WAV, <a  target="_blank" href="https://convertio.co/es/mpeg-wav/">aquí podrá hacer la conversión) </a></h4>
-            
+        <div class="columnRight" >
+            <img class="imgDecoration" src="home.png" alt="Ilustración de un abuelo pescando con su hijo" >
+        </div>
+    </div>
+    <div class="uniqueRow">
+        <!-- Resultado info general -->
+        <span></span>
+        <div class="btnCentrados" >
+            <label class="labelInputAudio" for="audioGeneral">
+                <img class="audioIcon" src="microphone.png" alt="">
+                <input class="inputAudio" type="file" id="audioGeneral" name="files[]" multiple />
+                Selecciona el audio
+            </label>
+            <span></span>
+            <button id="infoGeneral">Escuchar la información general</button>
+        </div>
+        <div>
+            <span></span>
+            <h2>Resultado de la información general: </h2>
+            <input class="inputResultado" type="text" id="resInfoGeneral" name="name" required minlength="4" maxlength="1000" >
+            <div class="btnCentrado">   
+                <button id="btnRegistrarGeneral">Registrar información general</button>
+            </div>
+             <!-- tabla de información general -->
+            <div>
+                <table id="guardInformacionGeneral" >
+                    <tr>
+                        <th>Barca</th>
+                        <th>Zona</th>
+                        <th>Pesca</th>
+                        <th>Tipus</th>
+                        <th>Caixes</th>
+                        <th>Mostres</th>
+                        <th>Codi</th>
+                        <th>Pes</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!-- Select de muestras -->
+        <div>
+            <h2>Elija el código de la muestra (código = caja)</h2>
             <form action="/action_page.php">
-                <select name="tipoRegistro" id="tipoRegistro">
-                    <option id="fromFile" value="1">Desde archivo</option>
-                    <option id="fromVoice" value="2">A partir de la voz</option>
+                <select class="selectCodi" name="codi" id="codi"> 
+                    <option id="selecciona_muestra" value="Selecciona">Selecciona una muestra</option>
                 </select>
             </form>
         </div>
-         <!-- fecha -->
-         <div style="margin-top: 2%;">
-            
-            <label for="date">Data:</label>
-            <input type="date" id="date" name="registre-date">
-        </div>
-        
-        <h4>Datos generales del muestreo</h4>
+        <!-- Registro especies -->
         <div>
-            <input type="file" id="audioGeneral" name="files[]" multiple />
+            <h2>Información de las especies</h2>
+            <div class="calloutGrey">
+                <p> 
+                    <strong>Ejemplo: </strong>Serranus Cabrilla 12 15,5 16 18 22 Scorpaena Scrofa 16,5 19 20
+                </p>
+            </div>
+            <div  class="btnCentrados" >
+                <label class="labelInputAudio" for="audioGeneral">
+                    <img class="audioIcon"src="microphone.png" alt="">
+                    <input class="inputAudio" type="file" id="audioEspecies" name="files[]" multiple />
+                    Selecciona el audio
+                </label>
+                <span></span>
+                <button id="infoEspecies">Escuchar información especies</button>
+            </div>
         </div>
-        
-        <button id="infoGeneral"  style="margin-top: 2%; margin-bottom: 2%;">Registrar información general</button>
-        <!-- <button id="detenerGeneral">Detener registro de infromación general</button> -->
-        <!-- <h4>Registro de los datos (decir STOP para finalizar la información general o ESPECIES para empezar a registrar las especies): </h4> -->
-        <!-- <h4>Ejemplo: Barco Anotnia munar segunda, Zona Portocolom, Pesca Arrosegament, Tipus Moralla Vermella, Caixes 4, Mostres 2, Codi 1, Pes 19. </h4> -->
-        
-        <div></div>
-        <label for="resInfoGeneral">Resultado: </label>
-        <div></div>
-        <input type="text" id="resInfoGeneral" name="name" required minlength="4" maxlength="1000" size="100%" >
-        <div style="margin-top: 2%;">
-            <!-- tabla de información general -->
-            <table id="guardInformacionGeneral" >
-                <tr>
-                    <th>Barca</th>
-                    <th>Zona</th>
-                    <th>Pesca</th>
-                    <th>Tipus</th>
-                    <th>Caixes</th>
-                    <th>Mostres</th>
-                    <th>Codi</th>
-                    <th>Pes</th>
-                </tr>
-            </table>
-        </div>
-        <!--desplegable del código de la muestra-->
-        <div style="margin-top: 2%;">
-            <form action="/action_page.php">
-                <label for="codi">Código de la muestra = caja:</label>
-                <select name="codi" id="codi">
-                  <option id="selecciona_muestra" value="Selecciona">Selecciona una muestra</option>
-                </select>
-            </form>
-        </div>
-        <h4>Almacena las tallas de las especies</h4>
         <div>
-            <input type="file" id="audioEspecies" name="files[]" multiple />
+            <h2>Resultado de la información general:</h2>
+            <input class="inputResultado" type="text" id="resInfoEspecies" name="name" required minlength="4" maxlength="1000" size="100%" >
+            <div class="btnCentrado">
+                <button id="btnRegistrarEspecies">Registrar la muestra</button>
+            </div>
+            <div>
+                <table id="guardInformacionEspecies">
+                    <tr>
+                        <th>Especie</th>
+                        <th>Código</th>
+                        <th>Talla individu</th>
+                    </tr>
+                </table>
+            </div>
             
         </div>
-        
-        <!-- <p>Primero indicar la especie y luego mencionar las diferentes tallas que hay de esa especie</p> -->
-        <button id="infoEspecies" style="margin-top: 2%; margin-bottom: 2%;">Registrar la muestra</button>
-        <div></div>
-        <label for="resInfoEspecies">Resultado: </label>
-        <div></div>
-        <input type="text" id="resInfoEspecies" name="name" required minlength="4" maxlength="1000" size="100%" >
-        <div></div>
-        <button id="observaciones" style="margin-top: 2%; margin-bottom: 2%;">Registrar observaciones</button>
-        <div style="margin-top: 2%;"><!-- tabla de las especies -->
-            <table id="guardInformacionEspecies">
-                <tr>
-                    <th>Especie</th>
-                    <th>Código</th>
-                    <th>Talla individu</th>
-                </tr>
-            </table>
-        </div>
-        <button id="exportarCSV" style="margin-top: 2%; margin-bottom: 2%;">Exportar información</button>
-        
-        <div></div>
-        <h4>HTML Table</h4>
+        <!-- Registrar observaciones -->
         <div>
+            <h2>Añadir Observaciones</h2>
+            <div class="calloutGrey">
+                <p> 
+                    <strong>Ejemplo: </strong>La muestra 1 puede estar infectada
+                </p>
+            </div>
+            <div  class="btnCentrados" >
+                <label class="labelInputAudio" for="audioObservaciones">
+                    <img class="audioIcon"src="microphone.png" alt="">
+                    <input class="inputAudio" type="file" id="audioObservaciones" name="files[]" multiple />
+                    Selecciona el audio
+                </label>
+                <span></span>
+                <button id="observaciones" >Escuchar observaciones</button>
+            </div>
+        </div>
+        <div>
+            <h2>Resultado de la observación</h2>
+            <input class="inputResultado" type="text" id="resInfoObservaciones" name="name" required minlength="4" maxlength="1000" size="100%" >
+            <div class="btnCentrado">
+                <button id="btnRegistrarObservaciones">Registrar la observacion</button>
+            </div>
+            <div>
+                <table id="guardInformacionObservaciones">
+                    <tr>
+                        <th>Especie</th>
+                        <th>Código</th>
+                        <th>Talla individu</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        
+        <div>
+            <h2>HTML Table</h2>
             <!-- tabla definitiva -->
             <table id="guardarCSV">
                 <tr>
-                    <th>Codi</th>
+                    <th>Código</th>
                     <th>Especie</th>
                     <th>Talla individu</th>
-                    <th>Pes caixa</th>
-                    <th>Caixes</th>
-                    <th>Mostres</th>
-                    <th>Codi mostra</th>
-                    <th>Tipus</th>
+                    <th>Peso caja</th>
+                    <th>Cajas</th>
+                    <th>Muestras</th>
+                    <th>Codi</th>
+                    <th>Tipo</th>
                     <th>Zona</th>
-                    <th>Barca</th>
+                    <th>Barco</th>
                     <th>Pesca</th>
-                    <th>Data</th>
-                    <th>Observacions</th>
+                    <th>Fecha</th>
+                    <th>Observaciones</th>
                 </tr>
-               
+            
             </table>
+
         </div>
+        <div class="btnCentrado">
+            <button id="exportarCSV">Guardar csv del muestreo</button>
+        </div>
+        
     </div>
+    <footer>
+        <a href="http://www.ba.ieo.es/" target="_blank">Centre Oceanográfic de les Balears</a>
+    </footer>
     <script src="globalVariables.js"></script>
     <script src="functions.js"></script>
     <script src="script.js"></script>

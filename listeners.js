@@ -16,13 +16,75 @@ player.addEventListener("ended", function(){
 });
 
 exportarCSV.onclick = function () {
-    rellenarCSV()
     crearCSV()
 }
 
+
+btnRegistrarGeneral.onclick = function() {  
+    setResultadoGeneralNull()
+    var s = comprobarParseo(resInfoGeneral.value, 8)
+    if (s != null){
+        s = processGeneral(s, datos.arrBarco)
+        setCodiMuestras()
+    }else{
+        alert("Ha introducido algo mal, vuela a comprobar la información general.")
+    }
+}
+
+resInfoGeneral.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        btnRegistrarGeneral.click()
+    }
+});
+
+btnRegistrarEspecies.onclick = function(){
+    setResultadoEspeciesNull()
+    var s = comprobarParseo(resInfoEspecies.value, 1)
+    if (s != null){
+        s = processEspecies(s, datos.arrBarco)
+        
+    }else{
+        alert("Ha introducido algo mal, vuela a comprobar la información de las especies.")
+    }
+}
+resInfoEspecies.addEventListener("keypress", function(event){
+    if (event.key === "Enter") {
+        btnRegistrarEspecies.click()
+    }
+});
+
+btnRegistrarObservaciones.onclick = function(){
+   
+    const select = document.getElementById('codi');
+    var codi = select.options[select.selectedIndex].value;
+    resultadoGeneral.observaciones[codi - 1] = resInfoObservaciones.value
+    var tablaObservaciones = document.getElementById('guardInformacionObservaciones');
+    for (var i = 0; i< resultadoEspecies.especie.length; i++){
+        for (var j=0; j<datos.especies.length; j++){
+            if (resultadoEspecies.especie[i].includes(datos.especies[j])){
+            resultadoEspecies.codigo[i] =  datos.codigos[j]
+            break;
+            }
+        }
+        for (var j = 0; j < resultadoEspecies.talla[i].length; j++){
+            var row = tablaObservaciones.insertRow()
+            resultadoHTML = "<th>" + resultadoEspecies.especie[i] + "</th><th>" + resultadoEspecies.codigo[i] 
+            + "</th><th>" + resultadoEspecies.talla[i][j] + "</th><th>" + resInfoObservaciones.value + "</th>"
+            row.innerHTML = resultadoHTML
+        }
+    }
+}
+resInfoObservaciones.addEventListener("keypress", function(event){
+    if (event.key === "Enter") {
+       btnRegistrarObservaciones.click()
+    }
+});
+
 selectCodi.addEventListener("change", function() {
-    infoEspecies.innerHTML = "Registrar la muestra " + selectCodi.options[selectCodi.selectedIndex].value
-    observaciones.innerHTML = "Registrar observaciones de la muestra " + selectCodi.options[selectCodi.selectedIndex].value
+    infoEspecies.innerHTML = "Escuchar información especies " + selectCodi.options[selectCodi.selectedIndex].value
+    btnRegistrarEspecies.innerHTML = "Registrar la muestra " + selectCodi.options[selectCodi.selectedIndex].value
+    observaciones.innerHTML = "Escuchar observación " + selectCodi.options[selectCodi.selectedIndex].value
+    btnRegistrarObservaciones.innerHTML = "Registrar la observación " + selectCodi.options[selectCodi.selectedIndex].value
 });
 
 document.getElementById('audioGeneral').addEventListener('change', handleFileSelect, false);
@@ -46,7 +108,7 @@ infoGeneral.onclick = function () {
         setResultadoGeneralNull()
         recognitionGeneral.start();
         infoGeneral.style.background = naranja;
-        infoGeneral.innerHTML ="Registrando..."
+        infoGeneral.innerHTML ="Escuchando..."
         var fecha = document.getElementById('date')
         resultadoGeneral.dia = fecha.getAttribute('value')
         if (aPartirArchivo){
@@ -55,7 +117,8 @@ infoGeneral.onclick = function () {
     }else{ 
         btnGeneral = false;
         recognitionGeneral.stop();
-        infoGeneral.innerHTML = "Registrar información general"
+        player.pause()
+        infoGeneral.innerHTML = "Escuchar la información general"
         infoGeneral.style.background = amarillo;
     }
 }
@@ -64,7 +127,7 @@ infoEspecies.onclick = function () {
     if (!btnEspecies){
         btnEspecies = true;
         resInfoEspecies.value = ""
-        infoEspecies.innerHTML = "Registrando..."
+        infoEspecies.innerHTML = "Escuchando..."
         recognitionEspecies.start();
         infoEspecies.style.background = naranja;
         if (aPartirArchivo){
@@ -73,7 +136,8 @@ infoEspecies.onclick = function () {
     }else {
         btnEspecies = false;
         recognitionEspecies.stop();
-        infoEspecies.innerHTML = "Registrar la muestra " + selectCodi.options[selectCodi.selectedIndex].value
+        player.pause()
+        infoEspecies.innerHTML = "Escuchar información especies " + selectCodi.options[selectCodi.selectedIndex].value
         infoEspecies.style.background = amarillo;
     }
 }
@@ -86,8 +150,9 @@ observaciones.onclick = function() {
         observaciones.style.background = naranja;
     }else {
         btnObservaciones = false;
-        observaciones.innerHTML = "Registrar observaciones de la muestra " + selectCodi.options[selectCodi.selectedIndex].value
+        observaciones.innerHTML = "Escuchar observación " + selectCodi.options[selectCodi.selectedIndex].value
         recognitionObservaciones.stop();
+        player.pause()
         observaciones.style.background = amarillo;
     }
 }

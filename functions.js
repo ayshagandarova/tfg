@@ -25,7 +25,7 @@ function setCodiMuestras(){
     for (var i = 0; i < resultadoGeneral.observaciones.length; i++){
       resultadoGeneral.observaciones[i] = ""
     }
-    infoEspecies.innerHTML = "Registrar la muestra " + selectCodi.options[selectCodi.selectedIndex].value
+    infoEspecies.innerHTML = "Escuchar información especies " + selectCodi.options[selectCodi.selectedIndex].value
     observaciones.innerHTML = "Registrar observaciones de la muestra " + selectCodi.options[selectCodi.selectedIndex].value
 }
   
@@ -48,9 +48,6 @@ function setResultadoEspeciesNull(){
 }
   
 function rellenarCSV(){
-    var resultado = document.getElementById('guardarCSV');
-    // primero recorremos las especies y guardamos la info general con la especie + tallas
-    // luego recorremos otra especie con sus tallas y así sucesivamente 
     var del = ';'
     var select = document.getElementById('codi');
     resultadoGeneral.codi = select.options[select.selectedIndex].value;
@@ -60,12 +57,12 @@ function rellenarCSV(){
         resultadoGeneral.pes + '</th><th>' + resultadoGeneral.caixes + '</th><th>' + resultadoGeneral.mostres + '</th><th>' + resultadoGeneral.codi +
         '</th><th>' + resultadoGeneral.tipus + '</th><th>' + resultadoGeneral.zona + '</th><th>' + resultadoGeneral.barco + '</th><th>' + resultadoGeneral.pesca +
         '</th><th>' + resultadoGeneral.dia + '</th><th>' + resultadoGeneral.observaciones[resultadoGeneral.codi - 1] + '</th>' 
-        var row = resultado.insertRow()
+        var row = tablaResultado.insertRow()
         row.innerHTML = resultadoHTML
         csv += resultadoEspecies.codigo[i] + del + resultadoEspecies.especie[i] + del + resultadoEspecies.talla[i][j] + del + 
         resultadoGeneral.pes + del + resultadoGeneral.caixes + del + resultadoGeneral.mostres + del + resultadoGeneral.codi + del + 
-        resultadoGeneral.tipus + del + resultadoGeneral.zona + del + resultadoGeneral.barco + del + resultadoGeneral.pesca + del + resultadoGeneral.dia 
-        + resultadoGeneral.observaciones[resultadoGeneral.codi - 1] + "\n"
+        resultadoGeneral.tipus + del + resultadoGeneral.zona + del + resultadoGeneral.barco + del + resultadoGeneral.pesca + del + 
+        resultadoGeneral.dia + del + resultadoGeneral.observaciones[resultadoGeneral.codi - 1] +  "\n"
       }
     }
     if(resultadoGeneral.codi != select.options[select.length-1].value){
@@ -80,7 +77,7 @@ function crearCSV(){
     }
     var link = window.document.createElement("a");
     link.setAttribute("href", "data:text/csv;charset=utf-8," + encodeURI(csv));
-    link.setAttribute("download", resultadoGeneral.dia + ".csv"); 
+    link.setAttribute("download", resultadoGeneral.dia + "_" + resultadoGeneral.barco + "_" + resultadoGeneral.tipus + ".csv"); 
     link.click();
     resInfoGeneral.value = ""
     setResultadoGeneralNull()
@@ -90,7 +87,8 @@ function isNum(val){
     return !isNaN(val)
 }
   
-function parsear(response, num){
+function comprobarParseo(response, num){
+    response = response.toLowerCase()
     for (var i = 0; i<datos.separadorColumnas.length; i++){
         if ((datos.separadorColumnas[i] === "barca " || datos.separadorColumnas[i] === "barco "
         || datos.separadorColumnas[i] === "especies " || datos.separadorColumnas[i] === "especie "
@@ -111,15 +109,7 @@ function parsear(response, num){
     }
     return response;
 }
-  
-function comprobarParseo(response, num){
-    response = parsear(response, num)
-    if (response === null){
-      return null
-    }
-    return response
-}
-  
+
 function processGeneral(response ) {
   
     //barco, zona, pesca, tipus, caixes, mostres, codi, pes
@@ -169,7 +159,7 @@ function processEspecies(response) {
         resultadoEspecies.talla[i] = tallas
     }
   
-    var resultado = document.getElementById('guardInformacionEspecies');
+    var tablaEspecies = document.getElementById('guardInformacionEspecies');
     for (var i = 0; i< resultadoEspecies.especie.length; i++){
         for (var j=0; j<datos.especies.length; j++){
             if (resultadoEspecies.especie[i].includes(datos.especies[j])){
@@ -178,7 +168,7 @@ function processEspecies(response) {
             }
         }
         for (var j = 0; j < resultadoEspecies.talla[i].length; j++){
-            var row = resultado.insertRow()
+            var row = tablaEspecies.insertRow()
             resultadoHTML = "<th>" + resultadoEspecies.especie[i] + "</th><th>" + resultadoEspecies.codigo[i] + "</th><th>" + resultadoEspecies.talla[i][j] + "</th>"
             row.innerHTML = resultadoHTML
         }
@@ -201,8 +191,8 @@ function definirGramaticas(datosFichero, datos) {
       ' | ' + datosFichero.numeros.join(' | ')  + ' ;';
 }
   
-function handleFileSelect(evt) {//console.log('evt', evt.target.files);
-    var files = evt.target.files; // FileList object
+function handleFileSelect(evt) {
+    var files = evt.target.files; 
     playFile(files[0]);
 }
   

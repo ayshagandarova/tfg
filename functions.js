@@ -77,7 +77,7 @@ function crearCSV(){
     }
     var link = window.document.createElement("a");
     link.setAttribute("href", "data:text/csv;charset=utf-8," + encodeURI(csv));
-    link.setAttribute("download", resultadoGeneral.dia + "_" + resultadoGeneral.barco + "_" + resultadoGeneral.tipus + ".csv"); 
+    link.setAttribute("download", resultadoGeneral.dia + "_" + resultadoGeneral.barco.replace(" ", "_") + "_" + resultadoGeneral.tipus.replace(" ", "_") + ".csv"); 
     link.click();
     resInfoGeneral.value = ""
     setResultadoGeneralNull()
@@ -176,16 +176,11 @@ function processEspecies(response) {
     return response
 }
 
-  // creates the grammar of the data from json
 function definirGramaticas(datosFichero, datos) {
     datos.vocGeneral = datosFichero.barcos.concat(datosFichero.zonas.concat(datosFichero.pesca.concat(datosFichero.tipus)))
-    //datos.barco = datos.barco.normalize('NFD')//.replace(/[\u0300-\u036f]/g, ""); // quitar acentos
     datos.especies = datosFichero.especie
-    datos.separadorColumnas = datosFichero.separadorColumnas // separador de las columnas () en el primer audio tiene que haber 8 columnas
+    datos.separadorColumnas = datosFichero.separadorColumnas 
     datos.codigos = datosFichero.codigos
-    //correccioNumeros = datosFichero.numeros
-    //datos.peces = datos.peces.normalize('NFD')//.replace(/[\u0300-\u036f]/g, ""); // quitar acentos
-    // datos.gramatica = '#JSGF V1.0; grammar infoGeneral; public <infoGeneral> = ' + datos.arrGeneral.join(' | ') + ';';
     datos.gramatica = '#JSGF V1.0; grammar vocabulario; public <vocabulario> = ' + 
       datos.especies.join(' | ') + ' | ' + datos.vocGeneral.join(' | ') + ' | ' + datos.separadorColumnas.join(' | ')  + 
       ' | ' + datosFichero.numeros.join(' | ')  + ' ;';

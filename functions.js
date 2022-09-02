@@ -1,13 +1,3 @@
-
-function setFecha(){
-    var fecha = document.getElementById('date')
-    var d = new Date();
-    const mes = String(d.getMonth() + 1).padStart(2, '0');
-    const dia = String(d.getDate()).padStart(2, '0');
-    resultadoGeneral.dia =  d.getFullYear() + '-' + mes + '-' +  dia
-    fecha.setAttribute('value', resultadoGeneral.dia)
-}
-  
 function setCodiMuestras(){
     var element = document.getElementById('selecciona_muestra')
     if (element !== null) {
@@ -77,10 +67,12 @@ function crearCSV(){
     }
     var link = window.document.createElement("a");
     link.setAttribute("href", "data:text/csv;charset=utf-8," + encodeURI(csv));
-    link.setAttribute("download", resultadoGeneral.dia + "_" + resultadoGeneral.barco.replace(" ", "_") + "_" + resultadoGeneral.tipus.replace(" ", "_") + ".csv"); 
+    link.setAttribute("download", resultadoGeneral.dia + "_" + resultadoGeneral.barco.replaceAll(" ", "_") + "_" + resultadoGeneral.tipus.replaceAll(" ", "_") + ".csv"); 
     link.click();
     resInfoGeneral.value = ""
     setResultadoGeneralNull()
+    resInfoEspecies.value = ""
+    resInfoObservaciones = ""
 }
   
 function isNum(val){
@@ -90,14 +82,8 @@ function isNum(val){
 function comprobarParseo(response, num){
     response = response.toLowerCase()
     for (var i = 0; i<datos.separadorColumnas.length; i++){
-        if ((datos.separadorColumnas[i] === "barca " || datos.separadorColumnas[i] === "barco "
-        || datos.separadorColumnas[i] === "especies " || datos.separadorColumnas[i] === "especie "
-        || datos.separadorColumnas[i] === "espècie " || datos.separadorColumnas[i] === "espècies "
-        || datos.separadorColumnas[i] === "talla "  || datos.separadorColumnas[i] === "talles " 
-        || datos.separadorColumnas[i] === "tallas " || datos.separadorColumnas[i] === "medidas " 
-        || datos.separadorColumnas[i] === "medides ") && response.includes(datos.separadorColumnas[i])
-        
-            ){
+        if ((datos.separadorColumnas[i] === "barca " || datos.separadorColumnas[i] === "barco ") 
+        && response.includes(datos.separadorColumnas[i]) ){
             response = response.replaceAll(datos.separadorColumnas[i] , "")
         } else if (response.includes(datos.separadorColumnas[i])){
             response = response.replaceAll(datos.separadorColumnas[i] , ";")
@@ -138,32 +124,48 @@ function processGeneral(response ) {
     row.innerHTML = resultadoHTML
     return s
 }
-  
+ // especie serranus cabrilla 17,5 20,5 especie scorpaena scrofa talles 16 especie serranus cabrilla talla 18  
 function processEspecies(response) {
     if (resultadoGeneral.codi == ""){
         resultadoGeneral.codi = document.getElementById('selecciona_muestra').innerHTML
     }
-    for (var i = 0; i < response.length; i++){
-        response[i] = response[i].replaceAll("," , ".")
-        response[i] = response[i].replaceAll("-" , " ")
-        var aux = response[i].split(" ")
-        resultadoEspecies.especie[i] = aux[0]
-        var tallas = new Array()
-        for (var j = 1; j < aux.length; j++){
-            if (!isNum(aux[j])){
-                resultadoEspecies.especie[i] += " " + aux[j]
-            }else{
-                tallas.push(aux[j].replaceAll("." , ","))
-            } 
+    var anteriorNumero = false
+    var especieAnterior = 0
+    response = response.replaceAll("   " , " ")
+    response = response.replaceAll("  " , " ")
+    response = response.replaceAll("," , ".")
+    response = response.split(" ")
+    var tallas = new Array()
+    resultadoEspecies.especie[especieAnterior] = response[0] 
+    for (var i = 1; i < response.length; i++){
+        if (!isNum(response[i]) && !anteriorNumero ){  // si no es numero y lo anterior no era un número
+            resultadoEspecies.especie[especieAnterior] += " " + response[i]
+        }else if (!isNum(response[i]) && anteriorNumero){ // no es numero y lo anterior es un numero
+            anteriorNumero = false
+            especieAnterior++;
+            resultadoEspecies.especie[especieAnterior] = response[i] // registramos nueva especie
+        }else if(isNum(response[i]) && !anteriorNumero) {// es numero y anterior no era numero
+            anteriorNumero = true;
+            if (tallas.length > 0){
+                resultadoEspecies.talla[especieAnterior-1] = tallas
+            }
+            var tallas = new Array()
+            tallas.push(response[i].replace("." , ","))
+            if (i + 1 == response.length){
+                resultadoEspecies.talla[especieAnterior] = tallas
+            }
+        }else if(isNum(response[i]) && anteriorNumero){
+            tallas.push(response[i].replace("." , ","))
+            if (i + 1 == response.length){
+                resultadoEspecies.talla[especieAnterior] = tallas
+            }
         }
-        resultadoEspecies.talla[i] = tallas
     }
-  
     var tablaEspecies = document.getElementById('guardInformacionEspecies');
     for (var i = 0; i< resultadoEspecies.especie.length; i++){
         for (var j=0; j<datos.especies.length; j++){
-            if (resultadoEspecies.especie[i].includes(datos.especies[j])){
-                resultadoEspecies.codigo[i] =  datos.codigos[j]
+            if (resultadoEspecies.especie[i].toLowerCase().includes(datos.especies[j])){
+                resultadoEspecies.codigo[i] = datos.codigos[j]
             break;
             }
         }

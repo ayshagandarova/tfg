@@ -39,13 +39,9 @@ resInfoGeneral.addEventListener("keypress", function(event) {
 
 btnRegistrarEspecies.onclick = function(){
     setResultadoEspeciesNull()
-    var s = comprobarParseo(resInfoEspecies.value, 1)
-    if (s != null){
-        s = processEspecies(s, datos.arrBarco)
-        
-    }else{
-        alert("Ha introducido algo mal, vuela a comprobar la información de las especies.")
-    }
+   
+        s = processEspecies(resInfoEspecies.value, datos.arrBarco)
+      
 }
 resInfoEspecies.addEventListener("keypress", function(event){
     if (event.key === "Enter") {
@@ -87,6 +83,10 @@ selectCodi.addEventListener("change", function() {
     btnRegistrarObservaciones.innerHTML = "Registrar la observación " + selectCodi.options[selectCodi.selectedIndex].value
 });
 
+fecha.addEventListener("change", function(){
+    resultadoGeneral.dia = fecha.value
+})
+
 document.getElementById('audioGeneral').addEventListener('change', handleFileSelect, false);
 document.getElementById('audioEspecies').addEventListener('change', handleFileSelect, false);
 
@@ -109,8 +109,6 @@ infoGeneral.onclick = function () {
         recognitionGeneral.start();
         infoGeneral.style.background = naranja;
         infoGeneral.innerHTML ="Escuchando..."
-        var fecha = document.getElementById('date')
-        resultadoGeneral.dia = fecha.getAttribute('value')
         if (aPartirArchivo){
             playAndRegister()
         }

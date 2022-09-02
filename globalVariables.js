@@ -42,3 +42,5 @@ const POR_VOZ = 2
 
 var aPartirArchivo = true
 
+var fecha = document.getElementById('date')
+

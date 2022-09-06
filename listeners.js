@@ -24,10 +24,12 @@ btnRegistrarGeneral.onclick = function() {
     setResultadoGeneralNull()
     var s = comprobarParseo(resInfoGeneral.value, 8)
     if (s != null){
-        s = processGeneral(s, datos.arrBarco)
+        processGeneral(s, datos.arrBarco)
         setCodiMuestras()
+    }else if (resInfoGeneral.value == ""){
+        swal ( "El resultado esta vacío.","", "error" )
     }else{
-        alert("Ha introducido algo mal, vuela a comprobar la información general.")
+        swal ( "Ha introducido algo mal, vuela a comprobar la información general." , "",  "error" )
     }
 }
 
@@ -77,23 +79,25 @@ resInfoObservaciones.addEventListener("keypress", function(event){
 });
 
 selectCodi.addEventListener("change", function() {
-    infoEspecies.innerHTML = "Escuchar información especies " + selectCodi.options[selectCodi.selectedIndex].value
-    btnRegistrarEspecies.innerHTML = "Registrar la muestra " + selectCodi.options[selectCodi.selectedIndex].value
-    observaciones.innerHTML = "Escuchar observación " + selectCodi.options[selectCodi.selectedIndex].value
-    btnRegistrarObservaciones.innerHTML = "Registrar la observación " + selectCodi.options[selectCodi.selectedIndex].value
+    infoEspecies.innerHTML = "Escuchar muestra " + selectCodi.options[selectCodi.selectedIndex].value
+    btnRegistrarEspecies.innerHTML = "Registrar muestra " + selectCodi.options[selectCodi.selectedIndex].value
+    observaciones.innerHTML = "Escuchar muestra " + selectCodi.options[selectCodi.selectedIndex].value
+    btnRegistrarObservaciones.innerHTML = "Registrar muestra " + selectCodi.options[selectCodi.selectedIndex].value
 });
 
 fecha.addEventListener("change", function(){
     resultadoGeneral.dia = fecha.value
+    
 })
 
 document.getElementById('audioGeneral').addEventListener('change', handleFileSelect, false);
 document.getElementById('audioEspecies').addEventListener('change', handleFileSelect, false);
+document.getElementById('audioObservaciones').addEventListener('change', handleFileSelect, false);
 
 infoGeneral.onclick = function () {
     if (aPartirArchivo){
         if(player.src == ""){
-            alert("No se ha adjuntado ningun archivo.")
+            swal ( "No se ha adjuntado ningun archivo." , "",  "error" )
             return
         }
     }
@@ -116,7 +120,7 @@ infoGeneral.onclick = function () {
         btnGeneral = false;
         recognitionGeneral.stop();
         player.pause()
-        infoGeneral.innerHTML = "Escuchar la información general"
+        infoGeneral.innerHTML = "Escuchar"
         infoGeneral.style.background = amarillo;
     }
 }
@@ -135,7 +139,7 @@ infoEspecies.onclick = function () {
         btnEspecies = false;
         recognitionEspecies.stop();
         player.pause()
-        infoEspecies.innerHTML = "Escuchar información especies " + selectCodi.options[selectCodi.selectedIndex].value
+        infoEspecies.innerHTML = "Escuchar muestra " + selectCodi.options[selectCodi.selectedIndex].value
         infoEspecies.style.background = amarillo;
     }
 }
@@ -146,9 +150,12 @@ observaciones.onclick = function() {
         observaciones.innerHTML = "Registrando"
         recognitionObservaciones.start();
         observaciones.style.background = naranja;
+        if (aPartirArchivo){
+            playAndRegister()
+        }
     }else {
         btnObservaciones = false;
-        observaciones.innerHTML = "Escuchar observación " + selectCodi.options[selectCodi.selectedIndex].value
+        observaciones.innerHTML = "Escuchar muestra " + selectCodi.options[selectCodi.selectedIndex].value
         recognitionObservaciones.stop();
         player.pause()
         observaciones.style.background = amarillo;

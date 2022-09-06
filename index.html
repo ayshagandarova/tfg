@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="">
     <link rel="shortcut icon" href="#">
+    
 </head>
 <body>
 
@@ -78,17 +79,17 @@
             <label class="labelInputAudio" for="audioGeneral">
                 <img class="audioIcon" src="microphone.png" alt="">
                 <input class="inputAudio" type="file" id="audioGeneral" name="files[]" multiple />
-                Selecciona el audio
+                Seleccionar el audio
             </label>
             <span></span>
-            <button id="infoGeneral">Escuchar la información general</button>
+            <button id="infoGeneral">Escuchar</button>
         </div>
         <div>
             <span></span>
             <h2>Resultado de la información general: </h2>
             <input class="inputResultado" type="text" id="resInfoGeneral" name="name" required minlength="4" maxlength="1000" >
             <div class="btnCentrado">   
-                <button id="btnRegistrarGeneral">Registrar información general</button>
+                <button id="btnRegistrarGeneral">Registrar</button>
             </div>
              <!-- tabla de información general -->
             <div>
@@ -111,7 +112,7 @@
             <h2>Elija el código de la muestra (código = caja)</h2>
             <form action="/action_page.php">
                 <select class="selectCodi" name="codi" id="codi"> 
-                    <option id="selecciona_muestra" value="Selecciona">Selecciona una muestra</option>
+                    <option id="selecciona_muestra" value="0">Seleccionar una muestra</option>
                 </select>
             </form>
         </div>
@@ -124,20 +125,20 @@
                 </p>
             </div>
             <div  class="btnCentrados" >
-                <label class="labelInputAudio" for="audioGeneral">
+                <label class="labelInputAudio noDisplay" for="audioGeneral" id="labelGeneral">
                     <img class="audioIcon"src="microphone.png" alt="">
                     <input class="inputAudio" type="file" id="audioEspecies" name="files[]" multiple />
-                    Selecciona el audio
+                    Seleccionar el audio
                 </label>
                 <span></span>
-                <button id="infoEspecies">Escuchar información especies</button>
+                <button id="infoEspecies">Escuchar muestra</button>
             </div>
         </div>
         <div>
             <h2>Resultado de las especies:</h2>
             <input class="inputResultado" type="text" id="resInfoEspecies" name="name" required minlength="4" maxlength="1000" size="100%" >
             <div class="btnCentrado">
-                <button id="btnRegistrarEspecies">Registrar la muestra</button>
+                <button id="btnRegistrarEspecies">Registrar muestra</button>
             </div>
             <div>
                 <table id="guardInformacionEspecies">
@@ -162,10 +163,10 @@
                 <label class="labelInputAudio" for="audioObservaciones">
                     <img class="audioIcon"src="microphone.png" alt="">
                     <input class="inputAudio" type="file" id="audioObservaciones" name="files[]" multiple />
-                    Selecciona el audio
+                    Seleccionar el audio
                 </label>
                 <span></span>
-                <button id="observaciones" >Escuchar observaciones</button>
+                <button id="observaciones" >Escuchar muestra</button>
             </div>
         </div>
         <div>
@@ -173,7 +174,7 @@
             <span></span>
             <input class="inputResultado" type="text" id="resInfoObservaciones" name="name" required minlength="4" maxlength="1000" size="100%" >
             <div class="btnCentrado">
-                <button id="btnRegistrarObservaciones">Registrar la observacion</button>
+                <button id="btnRegistrarObservaciones">Registrar muestra</button>
             </div>
             <div>
                 <table id="guardInformacionObservaciones">
@@ -212,13 +213,14 @@
 
         </div>
         <div class="btnCentrado">
-            <button id="exportarCSV">Guardar csv del muestreo</button>
+            <button id="exportarCSV">Guardar csv</button>
         </div>
         
     </div>
     <footer>
         <a href="http://www.ba.ieo.es/" target="_blank">Centre Oceanográfic de les Balears</a>
     </footer>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="globalVariables.js"></script>
     <script src="functions.js"></script>
     <script src="script.js"></script>

@@ -85,7 +85,7 @@ img{
 
 button {
   margin:20px;
-  width: 350px;
+  width: 250px;
   height: 60px;
   border-radius: 30px;
   border-style: solid;
@@ -118,7 +118,7 @@ button:hover{
 .labelInputAudio{
   font-family: "Krub", sans-serif;
   width: 300px;
-  height: 400px;
+  height: 60px;
   font-weight: 500;
   letter-spacing: 1px;
   font-size: 18px;
@@ -238,14 +238,14 @@ span{
   margin: 0;
   position: relative;
   top: 20%;
-  margin-left: 35%;
+  margin-left: 40%;
 }
 
 .btnCentrados{
   margin: 0;
   position: relative;
   top: 20%;
-  margin-left: 27%;
+  margin-left: 32%;
 }
 table {
   font-family: arial, sans-serif;

@@ -15,17 +15,10 @@ xmlhttp.onreadystatechange = function () {
         resInfoGeneral.value +=  event.results[event.results.length - 1][0].transcript
         return
       }
+      recognitionGeneral.stop()
       resInfoGeneral.value += event.results[event.results.length - 1][0].transcript.replace(" final", "")
       infoGeneral.style.background = amarillo;
       
-      const s = comprobarParseo(resInfoGeneral.value, 8)
-      if (s==null){
-        speechSynthesis.speak(new SpeechSynthesisUtterance("No se han podido registrar todas las columnas. Compruebe el texto"));
-      }else{
-        setCodiMuestras()
-        recognitionGeneral.stop()
-        infoGeneral.style.background = amarillo;
-      }
     }
 
     recognitionEspecies.onresult = function (event) { // hay respuesta válida
@@ -53,10 +46,13 @@ xmlhttp.onreadystatechange = function () {
     }
 
     recognitionGeneral.onerror = function (event) {
-      resInfoBarco.textContent = 'Se ha producido un error, recargue la página: ' + event.error;
+      swal ( "Se ha producido un error, recargue la página: " + event.error,"", "error" )
     }
     recognitionEspecies.onerror = function (event) {
-      resInfoBarco.textContent = 'Se ha producido un error, recargue la página: ' + event.error;
+      swal ( "Se ha producido un error, recargue la página: " + event.error,"", "error" )
+    }
+    recognitionObservaciones.onerror = function (event) {
+      swal ( "Se ha producido un error, recargue la página: " + event.error,"", "error" )
     }
   }
 };

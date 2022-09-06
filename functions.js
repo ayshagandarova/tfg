@@ -1,15 +1,21 @@
 function setCodiMuestras(){
+    var select = document.getElementById('codi')
     var element = document.getElementById('selecciona_muestra')
     if (element !== null) {
+        console.log("hoaa")
       element.remove()
+    }else {
+        console.log(select.options.length)
+        while (select.options.length != 0){
+            select.remove(0);
+        }
     }
-    var muestras = document.getElementById('codi')
     for (var i =1; i <= resultadoGeneral.mostres; i++){
       var codigo = document.createElement('option')
       codigo.setAttribute('value', i)
       codigo.setAttribute('id', i)
       codigo.innerHTML = i
-      muestras.appendChild(codigo)
+      select.appendChild(codigo)
     }
     resultadoGeneral.observaciones = new Array(resultadoGeneral.mostres)
     for (var i = 0; i < resultadoGeneral.observaciones.length; i++){
@@ -90,15 +96,13 @@ function comprobarParseo(response, num){
         }
     }
     response = response.split(";")
-    if (response.length < num){
+    if (response.length != num || !isNum(response[5]) ){
       return null
     }
     return response;
 }
 
 function processGeneral(response ) {
-  
-    //barco, zona, pesca, tipus, caixes, mostres, codi, pes
     resultadoGeneral.barco = response[0]
     resultadoGeneral.zona = response[1]
     resultadoGeneral.pesca = response[2]
@@ -111,18 +115,16 @@ function processGeneral(response ) {
     if (!isNum(response[5])){
       resultadoGeneral.mostres =2
     }
-    var s = response[0] + " " +response[1] +  response[2] + " "+ response[3] + " "+ response[4] + " "+ response[5] + " "+ response[6] + " "+ response[7];
-  
-    var resultado = document.getElementById('guardInformacionGeneral');
-    var row = resultado.insertRow()
-    var resultadoHTML = ""
-    for (var i =0; i< 8; i++){
-      resultadoHTML += "<th>" + response[i] + "</th>"
-      //var cell = row.insertCell() 
-      //cell.innerHTML = response[i]
+    var tabla = document.getElementById('guardInformacionGeneral');
+    if (tabla.rows.length > 1){
+        tabla.deleteRow(1);
     }
-    row.innerHTML = resultadoHTML
-    return s
+    var row = tabla.insertRow()
+    var tablaHTML = ""
+    for (var i =0; i< 8; i++){
+        tablaHTML += "<th>" + response[i] + "</th>"
+    }
+    row.innerHTML = tablaHTML
 }
  // especie serranus cabrilla 17,5 20,5 especie scorpaena scrofa talles 16 especie serranus cabrilla talla 18  
 function processEspecies(response) {
@@ -184,8 +186,7 @@ function definirGramaticas(datosFichero, datos) {
     datos.separadorColumnas = datosFichero.separadorColumnas 
     datos.codigos = datosFichero.codigos
     datos.gramatica = '#JSGF V1.0; grammar vocabulario; public <vocabulario> = ' + 
-      datos.especies.join(' | ') + ' | ' + datos.vocGeneral.join(' | ') + ' | ' + datos.separadorColumnas.join(' | ')  + 
-      ' | ' + datosFichero.numeros.join(' | ')  + ' ;';
+      datos.especies.join(' | ') + ' | ' + datos.vocGeneral.join(' | ') + ' | ' + datos.separadorColumnas.join(' | ')  + ' ;';
 }
   
 function handleFileSelect(evt) {
@@ -200,11 +201,11 @@ function playFile(file) {
             player.src = e.target.result;
         };
         freader.onerror = function(e){
-            alert("No se ha podido leer el archivo")
+            swal ( "No se ha podido leer el archivo" ,"",  "error" )
         }
         freader.readAsDataURL(file);
     }else{ // si no tiene ese formato no tenemos que añadir el archivo
-        alert("El archivo no tiene el formato adecuado (debe ser wav o mp3)")
+        swal ( "El archivo no tiene el formato adecuado (debe ser wav o mp3)" , "", "error" )
     }
 }
   
@@ -223,6 +224,6 @@ function setRecognition(gramatica, idioma) {
     recognition.continuous = true; // true si el reconocimiento de voz se hace de forma continua
     recognition.lang = idioma // idioma
     recognition.interimResults = false; // true si queremos resultados provisionales, false para resultados finales
-    recognition.maxAlternatives = 5; // te muestra las diferentes alternativas para que el usuario pueda elegir, nosotros solo utilizaremos una
+    recognition.maxAlternatives = 1; // te muestra las diferentes alternativas para que el usuario pueda elegir, nosotros solo utilizaremos una
     return recognition;
 }

@@ -23,6 +23,7 @@ var recognitionObservaciones
 
 var resultadoGeneral = {barco:"", zona:"", pesca: "", tipus:"", dia:"", caixes:"", mostres: "", codi:"0", pes: "", observaciones: []}
 var resultadoEspecies = {especie:[], codigo:[], talla: [] }
+var resultadoTodasLasEspecies = []
 
 var tablaResultado = document.getElementById('guardarCSV');
 var exportarCSV = document.getElementById('exportarCSV');
@@ -44,3 +45,4 @@ var aPartirArchivo = true
 
 var fecha = document.getElementById('date')
 
+var NetworkError = ""

@@ -16,6 +16,7 @@ player.addEventListener("ended", function(){
 });
 
 exportarCSV.onclick = function () {
+    rellenarCSV()
     crearCSV()
 }
 
@@ -40,10 +41,12 @@ resInfoGeneral.addEventListener("keypress", function(event) {
 });
 
 btnRegistrarEspecies.onclick = function(){
-    setResultadoEspeciesNull()
-   
+    if(resInfoEspecies.value != ""){
+        setResultadoEspeciesNull()
         s = processEspecies(resInfoEspecies.value, datos.arrBarco)
-      
+    }else {
+        swal ( "El resultado esta vacío.","", "error" )
+    }
 }
 resInfoEspecies.addEventListener("keypress", function(event){
     if (event.key === "Enter") {
@@ -83,6 +86,18 @@ selectCodi.addEventListener("change", function() {
     btnRegistrarEspecies.innerHTML = "Registrar muestra " + selectCodi.options[selectCodi.selectedIndex].value
     observaciones.innerHTML = "Escuchar muestra " + selectCodi.options[selectCodi.selectedIndex].value
     btnRegistrarObservaciones.innerHTML = "Registrar muestra " + selectCodi.options[selectCodi.selectedIndex].value
+    
+    var tablaEspecies = document.getElementById('guardInformacionEspecies');
+    while (tablaEspecies.rows.length > 1){
+        tablaEspecies.deleteRow(1);
+    }
+    resInfoEspecies.value = ""
+    
+    var tablaObser = document.getElementById('guardInformacionObservaciones');
+    while (tablaObser.rows.length > 1){
+        tablaObser.deleteRow(1);
+    }
+    resInfoObservaciones.value = ""
 });
 
 fecha.addEventListener("change", function(){
@@ -95,6 +110,10 @@ document.getElementById('audioEspecies').addEventListener('change', handleFileSe
 document.getElementById('audioObservaciones').addEventListener('change', handleFileSelect, false);
 
 infoGeneral.onclick = function () {
+    var tablaEspecies = document.getElementById('guardarCSV');
+    while (tablaEspecies.rows.length > 1){
+        tablaEspecies.deleteRow(1);
+    }
     if (aPartirArchivo){
         if(player.src == ""){
             swal ( "No se ha adjuntado ningun archivo." , "",  "error" )
@@ -109,6 +128,7 @@ infoGeneral.onclick = function () {
     if (!btnGeneral){ 
         btnGeneral = true
         resInfoGeneral.value = ""
+        resultadoTodasLasEspecies = []
         setResultadoGeneralNull()
         recognitionGeneral.start();
         infoGeneral.style.background = naranja;
@@ -130,6 +150,10 @@ infoEspecies.onclick = function () {
         btnEspecies = true;
         resInfoEspecies.value = ""
         infoEspecies.innerHTML = "Escuchando..."
+        if(NetworkError != ""){
+            resInfoEspecies.value = NetworkError
+            NetworkError = ""
+        }
         recognitionEspecies.start();
         infoEspecies.style.background = naranja;
         if (aPartirArchivo){

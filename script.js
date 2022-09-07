@@ -26,9 +26,6 @@ xmlhttp.onreadystatechange = function () {
         resInfoEspecies.value += event.results[event.results.length -1 ][0].transcript + " "
         return 
       }
-      if (resultadoEspecies.especie[0] != null){ 
-        rellenarCSV()
-      }
       recognitionEspecies.stop();
       resInfoEspecies.value += event.results[event.results.length - 1][0].transcript.replace(" final", "")
       infoEspecies.style.background = amarillo;
@@ -46,10 +43,19 @@ xmlhttp.onreadystatechange = function () {
     }
 
     recognitionGeneral.onerror = function (event) {
+
       swal ( "Se ha producido un error, recargue la página: " + event.error,"", "error" )
     }
     recognitionEspecies.onerror = function (event) {
-      swal ( "Se ha producido un error, recargue la página: " + event.error,"", "error" )
+      console.log(recognitionEspecies)
+      if(event.error.includes("Network")){
+        player.pause()
+        swal ( "Se ha producido un error porque el audio es largo, vuelva a pulsar el botón Escuchar","", "error" )
+        NetworkError = resInfoEspecies.value
+      }else {
+        swal ( "Se ha producido un error, recargue la página: " + event.error ,"", "error" )
+      }
+      
     }
     recognitionObservaciones.onerror = function (event) {
       swal ( "Se ha producido un error, recargue la página: " + event.error,"", "error" )

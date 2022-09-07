@@ -2,10 +2,8 @@ function setCodiMuestras(){
     var select = document.getElementById('codi')
     var element = document.getElementById('selecciona_muestra')
     if (element !== null) {
-        console.log("hoaa")
       element.remove()
     }else {
-        console.log(select.options.length)
         while (select.options.length != 0){
             select.remove(0);
         }
@@ -47,30 +45,32 @@ function rellenarCSV(){
     var del = ';'
     var select = document.getElementById('codi');
     resultadoGeneral.codi = select.options[select.selectedIndex].value;
-    for (var i = 0; i < resultadoEspecies.especie.length; i++){
-      for (var j = 0; j < resultadoEspecies.talla[i].length; j++){
-        var resultadoHTML = '<th>' + resultadoEspecies.codigo[i] + '</th><th>' + resultadoEspecies.especie[i] + '</th><th>' + resultadoEspecies.talla[i][j] + '</th><th>' + 
-        resultadoGeneral.pes + '</th><th>' + resultadoGeneral.caixes + '</th><th>' + resultadoGeneral.mostres + '</th><th>' + resultadoGeneral.codi +
-        '</th><th>' + resultadoGeneral.tipus + '</th><th>' + resultadoGeneral.zona + '</th><th>' + resultadoGeneral.barco + '</th><th>' + resultadoGeneral.pesca +
-        '</th><th>' + resultadoGeneral.dia + '</th><th>' + resultadoGeneral.observaciones[resultadoGeneral.codi - 1] + '</th>' 
-        var row = tablaResultado.insertRow()
-        row.innerHTML = resultadoHTML
-        csv += resultadoEspecies.codigo[i] + del + resultadoEspecies.especie[i] + del + resultadoEspecies.talla[i][j] + del + 
-        resultadoGeneral.pes + del + resultadoGeneral.caixes + del + resultadoGeneral.mostres + del + resultadoGeneral.codi + del + 
-        resultadoGeneral.tipus + del + resultadoGeneral.zona + del + resultadoGeneral.barco + del + resultadoGeneral.pesca + del + 
-        resultadoGeneral.dia + del + resultadoGeneral.observaciones[resultadoGeneral.codi - 1] +  "\n"
-      }
+    for (var k = 0; k< resultadoTodasLasEspecies.length; k++){
+        var codi = k+1
+        var aux = resultadoTodasLasEspecies[k]
+        for (var i = 0; i < aux.especie.length; i++){
+            for (var j = 0; j < aux.talla[i].length; j++){
+                var resultadoHTML = '<th>' + aux.codigo[i] + '</th><th>' + aux.especie[i] + '</th><th>' + aux.talla[i][j] + '</th><th>' + 
+                resultadoGeneral.pes + '</th><th>' + resultadoGeneral.caixes + '</th><th>' + resultadoGeneral.mostres + '</th><th>' + codi +
+                '</th><th>' + resultadoGeneral.tipus + '</th><th>' + resultadoGeneral.zona + '</th><th>' + resultadoGeneral.barco + '</th><th>' + resultadoGeneral.pesca +
+                '</th><th>' + resultadoGeneral.dia + '</th><th>' + resultadoGeneral.observaciones[k] + '</th>' 
+                var row = tablaResultado.insertRow()
+                row.innerHTML = resultadoHTML
+                csv += aux.codigo[i] + del + aux.especie[i] + del + aux.talla[i][j] + del + 
+                resultadoGeneral.pes + del + resultadoGeneral.caixes + del + resultadoGeneral.mostres + del + codi + del + 
+                resultadoGeneral.tipus + del + resultadoGeneral.zona + del + resultadoGeneral.barco + del + resultadoGeneral.pesca + del + 
+                resultadoGeneral.dia + del + resultadoGeneral.observaciones[k] +  "\n"
+            }
+        }
     }
     if(resultadoGeneral.codi != select.options[select.length-1].value){
         resInfoGeneral.value = ""
     }
+    resultadoTodasLasEspecies = []
     setResultadoEspeciesNull()
 }
 
 function crearCSV(){
-    if (resultadoEspecies.especie[0] != null){ 
-        rellenarCSV()
-    }
     var link = window.document.createElement("a");
     link.setAttribute("href", "data:text/csv;charset=utf-8," + encodeURI(csv));
     link.setAttribute("download", resultadoGeneral.dia + "_" + resultadoGeneral.barco.replaceAll(" ", "_") + "_" + resultadoGeneral.tipus.replaceAll(" ", "_") + ".csv"); 
@@ -95,6 +95,9 @@ function comprobarParseo(response, num){
             response = response.replaceAll(datos.separadorColumnas[i] , ";")
         }
     }
+    if(response[response.length-1]==" "){
+        response = response.slice(0, response.length - 1);
+    }
     response = response.split(";")
     if (response.length != num || !isNum(response[5]) ){
       return null
@@ -112,9 +115,6 @@ function processGeneral(response ) {
     resultadoGeneral.codi = response[6]
     resultadoGeneral.pes = response[7]
   
-    if (!isNum(response[5])){
-      resultadoGeneral.mostres =2
-    }
     var tabla = document.getElementById('guardInformacionGeneral');
     if (tabla.rows.length > 1){
         tabla.deleteRow(1);
@@ -131,11 +131,27 @@ function processEspecies(response) {
     if (resultadoGeneral.codi == ""){
         resultadoGeneral.codi = document.getElementById('selecciona_muestra').innerHTML
     }
+    resultadoTodasLasEspecies[selectCodi.options[selectCodi.selectedIndex].value - 1] = resultadoEspecies
+    var tablaEspecies = document.getElementById('guardInformacionEspecies');
+    while (tablaEspecies.rows.length > 1){
+        tablaEspecies.deleteRow(1);
+    }
+    resInfoEspecies.value = ""
+
     var anteriorNumero = false
     var especieAnterior = 0
+    response = response.replaceAll(" y medio", ",5")
+    response = response.replaceAll("ymedio", ",5")
+    response = response.replaceAll(":30", ",5")
+    response = response.replaceAll(":", " ")
+    response = response.replaceAll("\n" , " ")
+    response = response.replaceAll("    " , " ")
     response = response.replaceAll("   " , " ")
     response = response.replaceAll("  " , " ")
     response = response.replaceAll("," , ".")
+    if(response[response.length-1]==" "){
+        response = response.slice(0, response.length - 1);
+    }
     response = response.split(" ")
     var tallas = new Array()
     resultadoEspecies.especie[especieAnterior] = response[0] 
@@ -166,7 +182,8 @@ function processEspecies(response) {
     var tablaEspecies = document.getElementById('guardInformacionEspecies');
     for (var i = 0; i< resultadoEspecies.especie.length; i++){
         for (var j=0; j<datos.especies.length; j++){
-            if (resultadoEspecies.especie[i].toLowerCase().includes(datos.especies[j])){
+            if (datos.especies[j].includes(resultadoEspecies.especie[i].toLowerCase())){
+                resultadoEspecies.especie[i] = datos.especies[j]
                 resultadoEspecies.codigo[i] = datos.codigos[j]
             break;
             }
@@ -177,6 +194,7 @@ function processEspecies(response) {
             row.innerHTML = resultadoHTML
         }
     }
+    resultadoTodasLasEspecies[selectCodi.options[selectCodi.selectedIndex].value - 1] = resultadoEspecies
     return response
 }
 

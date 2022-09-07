@@ -231,7 +231,8 @@ span{
 
 .inputResultado{
   width: 100%;
-  height: 30px;
+  height: 70px;
+  font-size: 1.25rem;
 }
 
 .btnCentrado{
@@ -327,4 +328,7 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+.resultado{
+  height: 300px;;
 }

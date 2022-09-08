@@ -48,10 +48,14 @@ xmlhttp.onreadystatechange = function () {
     }
     recognitionEspecies.onerror = function (event) {
       console.log(recognitionEspecies)
-      if(event.error.includes("Network")){
+      if(event.error.includes("network")){
         player.pause()
-        swal ( "Se ha producido un error porque el audio es largo, vuelva a pulsar el botón Escuchar","", "error" )
         NetworkError = resInfoEspecies.value
+        console.log(NetworkError)
+        btnEspecies = false
+        infoEspecies.innerHTML = selectCodi.options[selectCodi.selectedIndex].value
+        infoEspecies.style.background = amarillo;
+        swal ( "Se ha producido un error porque el audio es largo","Vuelva a pulsar Escuchar para seguir registrando. Los datos anteriores no se perderán.", "error" )
       }else {
         swal ( "Se ha producido un error, recargue la página: " + event.error ,"", "error" )
       }

@@ -15,10 +15,6 @@ function setCodiMuestras(){
       codigo.innerHTML = i
       select.appendChild(codigo)
     }
-    resultadoGeneral.observaciones = new Array(resultadoGeneral.mostres)
-    for (var i = 0; i < resultadoGeneral.observaciones.length; i++){
-      resultadoGeneral.observaciones[i] = ""
-    }
     infoEspecies.innerHTML = "Escuchar información especies " + selectCodi.options[selectCodi.selectedIndex].value
     observaciones.innerHTML = "Registrar observaciones de la muestra " + selectCodi.options[selectCodi.selectedIndex].value
 }
@@ -32,42 +28,34 @@ function setResultadoGeneralNull(){
     resultadoGeneral.mostres=""
     resultadoGeneral.codi=""
     resultadoGeneral.pes=""
-    resultadoGeneral.observaciones = []
 }
 
-function setResultadoEspeciesNull(){
-    resultadoEspecies.codigo = []
-    resultadoEspecies.especie = []
-    resultadoEspecies.talla = []
-}
-  
 function rellenarCSV(){
     var del = ';'
     var select = document.getElementById('codi');
     resultadoGeneral.codi = select.options[select.selectedIndex].value;
-    for (var k = 0; k< resultadoTodasLasEspecies.length; k++){
+    for (var k = 0; k< resultEspecies.length; k++){
         var codi = k+1
-        var aux = resultadoTodasLasEspecies[k]
+        var aux = resultEspecies[k]
         for (var i = 0; i < aux.especie.length; i++){
             for (var j = 0; j < aux.talla[i].length; j++){
                 var resultadoHTML = '<th>' + aux.codigo[i] + '</th><th>' + aux.especie[i] + '</th><th>' + aux.talla[i][j] + '</th><th>' + 
                 resultadoGeneral.pes + '</th><th>' + resultadoGeneral.caixes + '</th><th>' + resultadoGeneral.mostres + '</th><th>' + codi +
                 '</th><th>' + resultadoGeneral.tipus + '</th><th>' + resultadoGeneral.zona + '</th><th>' + resultadoGeneral.barco + '</th><th>' + resultadoGeneral.pesca +
-                '</th><th>' + resultadoGeneral.dia + '</th><th>' + resultadoGeneral.observaciones[k] + '</th>' 
+                '</th><th>' + resultadoGeneral.dia + '</th><th>' + aux.observaciones + '</th>' 
                 var row = tablaResultado.insertRow()
                 row.innerHTML = resultadoHTML
                 csv += aux.codigo[i] + del + aux.especie[i] + del + aux.talla[i][j] + del + 
                 resultadoGeneral.pes + del + resultadoGeneral.caixes + del + resultadoGeneral.mostres + del + codi + del + 
                 resultadoGeneral.tipus + del + resultadoGeneral.zona + del + resultadoGeneral.barco + del + resultadoGeneral.pesca + del + 
-                resultadoGeneral.dia + del + resultadoGeneral.observaciones[k] +  "\n"
+                resultadoGeneral.dia + del + aux.observaciones +  "\n"
             }
         }
     }
     if(resultadoGeneral.codi != select.options[select.length-1].value){
         resInfoGeneral.value = ""
     }
-    resultadoTodasLasEspecies = []
-    setResultadoEspeciesNull()
+    resultEspecies = []
 }
 
 function crearCSV(){
@@ -75,10 +63,11 @@ function crearCSV(){
     link.setAttribute("href", "data:text/csv;charset=utf-8," + encodeURI(csv));
     link.setAttribute("download", resultadoGeneral.dia + "_" + resultadoGeneral.barco.replaceAll(" ", "_") + "_" + resultadoGeneral.tipus.replaceAll(" ", "_") + ".csv"); 
     link.click();
+    csv = ""
     resInfoGeneral.value = ""
     setResultadoGeneralNull()
     resInfoEspecies.value = ""
-    resInfoObservaciones = ""
+    resInfoObservaciones.value = ""
 }
   
 function isNum(val){
@@ -127,23 +116,24 @@ function processGeneral(response ) {
     row.innerHTML = tablaHTML
 }
  // especie serranus cabrilla 17,5 20,5 especie scorpaena scrofa talles 16 especie serranus cabrilla talla 18  
-function processEspecies(response) {
+function processEspecies(response,datos) {
     if (resultadoGeneral.codi == ""){
         resultadoGeneral.codi = document.getElementById('selecciona_muestra').innerHTML
     }
-    resultadoTodasLasEspecies[selectCodi.options[selectCodi.selectedIndex].value - 1] = resultadoEspecies
+    var resEspecies = {especie:[], codigo:[], talla: [], observaciones:""}
     var tablaEspecies = document.getElementById('guardInformacionEspecies');
     while (tablaEspecies.rows.length > 1){
         tablaEspecies.deleteRow(1);
     }
     resInfoEspecies.value = ""
-
     var anteriorNumero = false
     var especieAnterior = 0
+    response = response.replaceAll("once", "11")
     response = response.replaceAll(" y medio", ",5")
     response = response.replaceAll("ymedio", ",5")
     response = response.replaceAll(":30", ",5")
     response = response.replaceAll(":", " ")
+    response = response.replaceAll("-", " ")
     response = response.replaceAll("\n" , " ")
     response = response.replaceAll("    " , " ")
     response = response.replaceAll("   " , " ")
@@ -154,47 +144,47 @@ function processEspecies(response) {
     }
     response = response.split(" ")
     var tallas = new Array()
-    resultadoEspecies.especie[especieAnterior] = response[0] 
+    resEspecies.especie[especieAnterior] = response[0] 
     for (var i = 1; i < response.length; i++){
         if (!isNum(response[i]) && !anteriorNumero ){  // si no es numero y lo anterior no era un número
-            resultadoEspecies.especie[especieAnterior] += " " + response[i]
+            resEspecies.especie[especieAnterior] += " " + response[i]
         }else if (!isNum(response[i]) && anteriorNumero){ // no es numero y lo anterior es un numero
             anteriorNumero = false
             especieAnterior++;
-            resultadoEspecies.especie[especieAnterior] = response[i] // registramos nueva especie
+            resEspecies.especie[especieAnterior] = response[i] // registramos nueva especie
         }else if(isNum(response[i]) && !anteriorNumero) {// es numero y anterior no era numero
             anteriorNumero = true;
             if (tallas.length > 0){
-                resultadoEspecies.talla[especieAnterior-1] = tallas
+                resEspecies.talla[especieAnterior-1] = tallas
             }
             var tallas = new Array()
             tallas.push(response[i].replace("." , ","))
             if (i + 1 == response.length){
-                resultadoEspecies.talla[especieAnterior] = tallas
+                resEspecies.talla[especieAnterior] = tallas
             }
         }else if(isNum(response[i]) && anteriorNumero){
             tallas.push(response[i].replace("." , ","))
             if (i + 1 == response.length){
-                resultadoEspecies.talla[especieAnterior] = tallas
+                resEspecies.talla[especieAnterior] = tallas
             }
         }
     }
     var tablaEspecies = document.getElementById('guardInformacionEspecies');
-    for (var i = 0; i< resultadoEspecies.especie.length; i++){
+    for (var i = 0; i< resEspecies.especie.length; i++){
         for (var j=0; j<datos.especies.length; j++){
-            if (datos.especies[j].includes(resultadoEspecies.especie[i].toLowerCase())){
-                resultadoEspecies.especie[i] = datos.especies[j]
-                resultadoEspecies.codigo[i] = datos.codigos[j]
+            if (datos.especies[j].includes(resEspecies.especie[i].toLowerCase())){
+                resEspecies.especie[i] = datos.especies[j]
+                resEspecies.codigo[i] = datos.codigos[j]
             break;
             }
         }
-        for (var j = 0; j < resultadoEspecies.talla[i].length; j++){
+        for (var j = 0; j < resEspecies.talla[i].length; j++){
             var row = tablaEspecies.insertRow()
-            resultadoHTML = "<th>" + resultadoEspecies.especie[i] + "</th><th>" + resultadoEspecies.codigo[i] + "</th><th>" + resultadoEspecies.talla[i][j] + "</th>"
+            resultadoHTML = "<th>" + resEspecies.especie[i] + "</th><th>" + resEspecies.codigo[i] + "</th><th>" + resEspecies.talla[i][j] + "</th>"
             row.innerHTML = resultadoHTML
         }
     }
-    resultadoTodasLasEspecies[selectCodi.options[selectCodi.selectedIndex].value - 1] = resultadoEspecies
+    resultEspecies[selectCodi.options[selectCodi.selectedIndex].value - 1] = resEspecies
     return response
 }
 

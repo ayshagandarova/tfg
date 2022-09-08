@@ -25,8 +25,13 @@ btnRegistrarGeneral.onclick = function() {
     setResultadoGeneralNull()
     var s = comprobarParseo(resInfoGeneral.value, 8)
     if (s != null){
+        resultEspecies = []
         processGeneral(s, datos.arrBarco)
         setCodiMuestras()
+        var tablaCSV = document.getElementById('guardarCSV');
+        while (tablaCSV.rows.length > 1){
+            tablaCSV.deleteRow(1);
+        }
     }else if (resInfoGeneral.value == ""){
         swal ( "El resultado esta vacío.","", "error" )
     }else{
@@ -42,8 +47,7 @@ resInfoGeneral.addEventListener("keypress", function(event) {
 
 btnRegistrarEspecies.onclick = function(){
     if(resInfoEspecies.value != ""){
-        setResultadoEspeciesNull()
-        s = processEspecies(resInfoEspecies.value, datos.arrBarco)
+        s = processEspecies(resInfoEspecies.value, datos)
     }else {
         swal ( "El resultado esta vacío.","", "error" )
     }
@@ -55,25 +59,18 @@ resInfoEspecies.addEventListener("keypress", function(event){
 });
 
 btnRegistrarObservaciones.onclick = function(){
-   
-    const select = document.getElementById('codi');
-    var codi = select.options[select.selectedIndex].value;
-    resultadoGeneral.observaciones[codi - 1] = resInfoObservaciones.value
     var tablaObservaciones = document.getElementById('guardInformacionObservaciones');
-    for (var i = 0; i< resultadoEspecies.especie.length; i++){
-        for (var j=0; j<datos.especies.length; j++){
-            if (resultadoEspecies.especie[i].includes(datos.especies[j])){
-            resultadoEspecies.codigo[i] =  datos.codigos[j]
-            break;
-            }
-        }
-        for (var j = 0; j < resultadoEspecies.talla[i].length; j++){
+    var aux = resultEspecies[selectCodi.options[selectCodi.selectedIndex].value - 1]
+    aux.observaciones = resInfoObservaciones.value
+    for (var i = 0; i< aux.especie.length; i++){
+        for (var j = 0; j < aux.talla[i].length; j++){
             var row = tablaObservaciones.insertRow()
-            resultadoHTML = "<th>" + resultadoEspecies.especie[i] + "</th><th>" + resultadoEspecies.codigo[i] 
-            + "</th><th>" + resultadoEspecies.talla[i][j] + "</th><th>" + resInfoObservaciones.value + "</th>"
+            resultadoHTML = "<th>" + aux.especie[i] + "</th><th>" + aux.codigo[i] 
+            + "</th><th>" + aux.talla[i][j] + "</th><th>" + aux.observaciones + "</th>"
             row.innerHTML = resultadoHTML
         }
     }
+    resultEspecies[codi-1]=  aux
 }
 resInfoObservaciones.addEventListener("keypress", function(event){
     if (event.key === "Enter") {

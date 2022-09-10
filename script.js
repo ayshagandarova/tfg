@@ -47,15 +47,15 @@ xmlhttp.onreadystatechange = function () {
       swal ( "Se ha producido un error, recargue la página: " + event.error,"", "error" )
     }
     recognitionEspecies.onerror = function (event) {
-      console.log(recognitionEspecies)
       if(event.error.includes("network")){
+        var tiempo = player.currentTime / 60
+        console.log(tiempo)
         player.pause()
         NetworkError = resInfoEspecies.value
         console.log(NetworkError)
-        btnEspecies = false
-        infoEspecies.innerHTML = selectCodi.options[selectCodi.selectedIndex].value
+        infoEspecies.click()
         infoEspecies.style.background = amarillo;
-        swal ( "Se ha producido un error porque el audio es largo","Vuelva a pulsar Escuchar para seguir registrando. Los datos anteriores no se perderán.", "error" )
+        swal ( "Se ha producido un error porque el audio es largo (" + tiempo +")","Vuelva a pulsar Escuchar para seguir registrando. Los datos anteriores no se perderán.", "error" )
       }else {
         swal ( "Se ha producido un error, recargue la página: " + event.error ,"", "error" )
       }

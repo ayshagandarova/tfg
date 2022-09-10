@@ -15,8 +15,11 @@ function setCodiMuestras(){
       codigo.innerHTML = i
       select.appendChild(codigo)
     }
-    infoEspecies.innerHTML = "Escuchar información especies " + selectCodi.options[selectCodi.selectedIndex].value
-    observaciones.innerHTML = "Registrar observaciones de la muestra " + selectCodi.options[selectCodi.selectedIndex].value
+    
+    infoEspecies.innerHTML = "Escuchar muestra " + selectCodi.options[selectCodi.selectedIndex].value
+    btnRegistrarEspecies.innerHTML = "Registrar muestra " + selectCodi.options[selectCodi.selectedIndex].value
+    observaciones.innerHTML = "Escuchar muestra " + selectCodi.options[selectCodi.selectedIndex].value
+    btnRegistrarObservaciones.innerHTML = "Registrar muestra " + selectCodi.options[selectCodi.selectedIndex].value
 }
   
 function setResultadoGeneralNull(){

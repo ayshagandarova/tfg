@@ -55,7 +55,7 @@ xmlhttp.onreadystatechange = function () {
         console.log(NetworkError)
         infoEspecies.click()
         infoEspecies.style.background = amarillo;
-        swal ( "Se ha producido un error porque el audio es largo (" + tiempo +")","Vuelva a pulsar Escuchar para seguir registrando. Los datos anteriores no se perderán.", "error" )
+        swal ( "Se ha producido un error porque el audio es largo","Vuelva a pulsar Escuchar para seguir registrando. Los datos anteriores no se perderán.", "error" )
       }else {
         swal ( "Se ha producido un error, recargue la página: " + event.error ,"", "error" )
       }
